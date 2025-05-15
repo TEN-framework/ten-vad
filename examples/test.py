@@ -5,7 +5,9 @@
 #
 import sys, os
 
+# Add paths for both include and lib directories
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../include")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../lib/macOS/ten_vad.framework/Versions/A")))
 from ten_vad import TenVad
 import scipy.io.wavfile as Wavfile
 

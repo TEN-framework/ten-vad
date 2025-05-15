@@ -7,7 +7,12 @@ class custom_install_command(install):
         install.run(self)
         target_dir = os.path.join(self.install_lib, "ten_vad_library")
         os.makedirs(target_dir, exist_ok=True)
-        shutil.copy("lib/Linux/x64/libten_vad.so", target_dir)
+        if os.name == 'nt':  # Windows
+            shutil.copy("lib/Windows/x64/ten_vad.dll", target_dir)
+        elif os.uname().sysname == "Darwin":  # macOS
+            shutil.copytree("lib/macOS/ten_vad.framework", os.path.join(target_dir, "ten_vad.framework"))
+        else:  # Linux
+            shutil.copy("lib/Linux/x64/libten_vad.so", target_dir)
         print(f"Files installed to: {target_dir}")
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
