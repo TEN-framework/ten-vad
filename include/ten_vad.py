@@ -11,26 +11,20 @@ class TenVad:
     def __init__(self, hop_size: int = 256, threshold: float = 0.5):
         self.hop_size = hop_size
         self.threshold = threshold
-        if os.path.exists(
-            os.path.join(
-                os.path.dirname(os.path.relpath(__file__)),
-                "../lib/Linux/x64/libten_vad.so",
-            )
-        ):
-            self.vad_library = CDLL(
-                os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)), 
-                    "../lib/Linux/x64/libten_vad.so",
-                )
-            )
+        if os.name == 'nt':  # Windows
+            lib_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "../lib/Windows/x64/ten_vad.dll")
+            installed_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "./ten_vad_library/ten_vad.dll")
+        elif os.uname().sysname == "Darwin":  # macOS
+            lib_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "../lib/macOS/ten_vad.framework/Versions/A/ten_vad")
+            installed_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "./ten_vad_library/ten_vad.framework/Versions/A/ten_vad")
+        else:  # Linux
+            lib_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "../lib/Linux/x64/libten_vad.so")
+            installed_path = os.path.join(os.path.dirname(os.path.relpath(__file__)), "./ten_vad_library/libten_vad.so")
+
+        if os.path.exists(lib_path):
+            self.vad_library = CDLL(lib_path)
         else:
-            self.vad_library = CDLL(
-                os.path.join(
-                    os.path.dirname(
-                        os.path.relpath(__file__)),
-                        "./ten_vad_library/libten_vad.so",
-                    )
-                )
+            self.vad_library = CDLL(installed_path)
         self.vad_handler = c_void_p(0)
         self.out_probability = c_float()
         self.out_flags = c_int32()
