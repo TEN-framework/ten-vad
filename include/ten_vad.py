@@ -1,12 +1,21 @@
 from ctypes import c_int, c_int32, c_float, c_size_t, CDLL, c_void_p, POINTER
 import numpy as np
 import os
+import platform
 
 class TenVad:
     def __init__(self, hop_size: int = 256, threshold: float = 0.5):
         self.hop_size = hop_size
         self.threshold = threshold
-        if os.path.exists(
+        
+        if platform.system() == "Darwin":
+            self.vad_library = CDLL(
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), 
+                    "../lib/macOS/ten_vad.framework/Versions/A/ten_vad"
+                )
+            )
+        elif os.path.exists(
             os.path.join(
                 os.path.dirname(os.path.relpath(__file__)),
                 "../lib/Linux/x64/libten_vad.so",
@@ -21,11 +30,11 @@ class TenVad:
         else:
             self.vad_library = CDLL(
                 os.path.join(
-                    os.path.dirname(
-                        os.path.relpath(__file__)),
-                        "./ten_vad_library/libten_vad.so",
-                    )
+                    os.path.dirname(os.path.relpath(__file__)),
+                    "./ten_vad_library/libten_vad.so",
                 )
+            )
+        
         self.vad_handler = c_void_p(0)
         self.out_probability = c_float()
         self.out_flags = c_int32()
