@@ -36,6 +36,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install system dependencies (Ubuntu only)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libc++1 \
+          libc++abi1 \
+          libstdc++6 \
+          build-essential \
+          libc6-dev
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
