@@ -1,0 +1,57 @@
+name: Test ten_vad package
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS ARM64
+          - os: macos-latest
+            python-version: '3.9'
+          - os: macos-latest
+            python-version: '3.10'
+          - os: macos-latest
+            python-version: '3.11'
+          
+          # Linux x86_64
+          - os: ubuntu-latest
+            python-version: '3.9'
+          - os: ubuntu-latest
+            python-version: '3.10'
+          - os: ubuntu-latest
+            python-version: '3.11'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install package
+      run: |
+        pip install .
+
+    - name: Run tests with real audio
+      run: |
+        cd examples
+        python test.py s0724-s0730.wav output.txt
+
+    - name: Test editable install
+      run: |
+        pip uninstall ten_vad -y
+        pip install -e .
+        python test_ten_vad.py
