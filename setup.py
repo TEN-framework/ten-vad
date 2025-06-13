@@ -1,29 +1,70 @@
-from setuptools import setup
-import os, shutil, platform
-from setuptools.command.install import install
+from setuptools import setup, find_packages
+import platform
+import os
+import shutil
 
-class custom_install_command(install):
-    def run(self):
-        install.run(self)
-        target_dir = os.path.join(self.install_lib, "ten_vad_library")
-        os.makedirs(target_dir, exist_ok=True)
-        
-        if platform.system() == "Darwin":
-            shutil.copy("lib/macOS/ten_vad.framework/Versions/A/ten_vad", 
-                       os.path.join(target_dir, "libten_vad.so"))
-        else:
-            shutil.copy("lib/Linux/x64/libten_vad.so", target_dir)
-        
-        print(f"Files installed to: {target_dir}")
+def get_platform_info():
+    """Get platform-specific library information"""
+    system = platform.system().lower()
+    machine = platform.machine().lower()
+    
+    platform_map = {
+        ("darwin", "arm64"): {
+            "source": "lib/macOS/ten_vad.framework/Versions/A/ten_vad",
+            "target": "libten_vad"
+        },
+        ("linux", "x86_64"): {
+            "source": "lib/Linux/x64/libten_vad.so",
+            "target": "libten_vad"
+        }
+    }
+    
+    key = (system, machine)
+    
+    if key not in platform_map:
+        supported = ", ".join([f"{s.title()} {m}" for s, m in platform_map.keys()])
+        raise NotImplementedError(
+            f"Unsupported platform: {system.title()} {machine}. "
+            f"Currently supported platforms are: {supported}"
+        )
+    
+    return platform_map[key]
 
-root_dir = os.path.dirname(os.path.abspath(__file__))
-shutil.copy(f"{root_dir}/include/ten_vad.py", f"{root_dir}/ten_vad.py")
+def prepare_library():
+    """Copy library to package directory for inclusion"""
+    try:
+        info = get_platform_info()
+        source_path = info["source"]
+        target_name = info["target"]
+        
+        if not os.path.exists(source_path):
+            raise FileNotFoundError(f"Required library not found: {source_path}")
+        
+        # Ensure package directory exists
+        os.makedirs("ten_vad", exist_ok=True)
+        
+        # Copy library to package directory
+        target_path = os.path.join("ten_vad", target_name)
+        shutil.copy2(source_path, target_path)
+        
+        return target_name
+        
+    except Exception as e:
+        print(f"Error preparing library: {e}")
+        raise
+
+# Prepare the library and get its name
+library_file = prepare_library()
+
 setup(
     name="ten_vad",
     version="1.0",
-    py_modules=["ten_vad"],
-    cmdclass={
-        "install": custom_install_command,
+    packages=find_packages(),
+    package_data={
+        "ten_vad": ["libten_vad"],
     },
+    include_package_data=True,
+    install_requires=[
+        "numpy",
+    ],
 )
-os.remove(f"{root_dir}/ten_vad.py")

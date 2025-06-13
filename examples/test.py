@@ -1,6 +1,6 @@
 import sys, os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../include")))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../include")))
 from ten_vad import TenVad
 import scipy.io.wavfile as Wavfile
 

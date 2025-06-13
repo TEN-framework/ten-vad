@@ -299,6 +299,11 @@ sudo apt update
 sudo apt install libc++1
 ```
 
+Finally, install the package using:
+```
+pip install .
+```
+
 <br>
 
 
