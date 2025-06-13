@@ -2,7 +2,7 @@ name: Test ten_vad package
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master, fix/macos-platform-support ]
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
@@ -54,4 +54,5 @@ jobs:
       run: |
         pip uninstall ten_vad -y
         pip install -e .
-        python test_ten_vad.py
+        cd examples
+        python test.py s0724-s0730.wav output.txt
