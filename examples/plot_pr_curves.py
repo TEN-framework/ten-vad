@@ -8,7 +8,7 @@ os.system('git clone https://github.com/snakers4/silero-vad.git')  # Clone the s
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "./silero-vad/src")))
 from silero_vad.utils_vad import VADIterator, init_jit_model
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../include")))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../include")))
 from ten_vad import TenVad
 
 def convert_label_to_framewise(label_file, hop_size):

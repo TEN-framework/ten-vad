@@ -1,16 +1,57 @@
+# Build directories
 examples/build-mac/
 examples/build-ios/
 examples/build-android/
 examples/build-linux/
 examples/build-windows/
 examples/build-web/
+
+# Python packaging and build artifacts
+build/
+dist/
+*.egg-info/
+ten_vad.egg-info/
+*.whl
+
+# Copied library files (created by setup.py)
+ten_vad/libten_vad
+ten_vad/ten_vad
+ten_vad/libten_vad.so
+ten_vad/*.so
+ten_vad/*.dylib
+ten_vad/*.dll
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+include/__pycache__/
+
+# Example outputs
+examples/out.txt
+examples/PR_Curves.png
+examples/PR_data_TEN_VAD.txt
+examples/silero-vad/
+
+# macOS
+.DS_Store
 include/.DS_Store
 lib/.DS_Store
 examples/.DS_Store
+
+# IDE
 .vscode/
-include/__pycache__/
-examples/out.txt
-.DS_Store
+.idea/
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Temporary files
+*.tmp
+*.temp
+.pytest_cache/
 
 
 
