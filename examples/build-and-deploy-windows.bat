@@ -1,6 +1,13 @@
 @echo off
 setlocal
 
+@REM
+@REM  Copyright © 2025 Agora
+@REM  This file is part of TEN Framework, an open source project.
+@REM  Licensed under the Apache License, Version 2.0, with certain conditions.
+@REM  Refer to the "LICENSE" file in the root directory for more information.
+@REM
+
 @REM Customize the arch
 set arch=x64
 @REM set arch=x86

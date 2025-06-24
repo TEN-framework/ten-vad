@@ -1,3 +1,9 @@
+//
+// Copyright © 2025 Agora
+// This file is part of TEN Framework, an open source project.
+// Licensed under the Apache License, Version 2.0, with certain conditions.
+// Refer to the "LICENSE" file in the root directory for more information.
+//
 #include <cassert>
 #include "ten_vad.h"
 #include "aed_st.h"
@@ -60,4 +66,4 @@ int ten_vad_destroy(ten_vad_handle_t* handle) {
   return AUP_Aed_destroy(handle);
 }
 
-const char* ten_vad_get_version(void) { return "2.1.2"; }
+const char* ten_vad_get_version(void) { return "1.0"; }
