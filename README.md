@@ -408,6 +408,7 @@ You have to download the **onnxruntime** packages from the [official website](ht
 1) cd examples_onnx/
 2) ./build-and-deploy-linux.sh --ort-root /absolute/path/to/your/onnxruntime/root/dir
 ```
+Note: If executing the onnx demo from a different directory than the one used when running build-and-deploy-linux.sh, ensure to create a symbolic link to src/onnx_model/ to prevent ONNX model file loading failures.
 
 <br>
 
