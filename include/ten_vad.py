@@ -7,31 +7,41 @@
 from ctypes import c_int, c_int32, c_float, c_size_t, CDLL, c_void_p, POINTER
 import numpy as np
 import os
+import platform
 
 class TenVad:
     def __init__(self, hop_size: int = 256, threshold: float = 0.5):
         self.hop_size = hop_size
         self.threshold = threshold
-        if os.path.exists(
-            os.path.join(
+        if platform.system() == "Linux" and platform.machine() == "x86_64":
+            git_path = os.path.join(
                 os.path.dirname(os.path.relpath(__file__)),
-                "../lib/Linux/x64/libten_vad.so",
+                "../lib/Linux/x64/libten_vad.so"
             )
-        ):
-            self.vad_library = CDLL(
-                os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)), 
-                    "../lib/Linux/x64/libten_vad.so",
+            if os.path.exists(git_path):
+                self.vad_library = CDLL(git_path)
+            else:
+                pip_path = os.path.join(
+                    os.path.dirname(os.path.relpath(__file__)),
+                    "./ten_vad_library/libten_vad.so"
                 )
+                self.vad_library = CDLL(pip_path)
+                
+        elif platform.system() == "Darwin":
+            git_path = os.path.join(
+                os.path.dirname(os.path.relpath(__file__)),
+                "../lib/macOS/ten_vad.framework/Versions/A/ten_vad"
             )
+            if os.path.exists(git_path):
+                self.vad_library = CDLL(git_path)
+            else:
+                pip_path = os.path.join(
+                    os.path.dirname(os.path.relpath(__file__)),
+                    "./ten_vad_library/libten_vad"
+                )
+                self.vad_library = CDLL(pip_path)
         else:
-            self.vad_library = CDLL(
-                os.path.join(
-                    os.path.dirname(
-                        os.path.relpath(__file__)),
-                        "./ten_vad_library/libten_vad.so",
-                    )
-                )
+            raise NotImplementedError(f"Unsupported platform: {platform.system()} {platform.machine()}")
         self.vad_handler = c_void_p(0)
         self.out_probability = c_float()
         self.out_flags = c_int32()
