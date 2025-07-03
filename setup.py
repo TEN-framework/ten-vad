@@ -21,6 +21,15 @@ class custom_install_command(install):
             shutil.copy("lib/macOS/ten_vad.framework/Versions/A/ten_vad", 
                        os.path.join(target_dir, "libten_vad"))
             print(f"macOS library installed to: {target_dir}")
+        elif platform.system().upper() == 'WINDOWS':
+            if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
+                shutil.copy("lib/Windows/x64/ten_vad.dll", 
+                       os.path.join(target_dir, "ten_vad.dll"))
+                print(f"Windows x64 library installed to: {target_dir}")
+            else:
+                shutil.copy("lib/Windows/x86/ten_vad.dll", 
+                       os.path.join(target_dir, "ten_vad.dll"))
+                print(f"Windows x86 library installed to: {target_dir}")
         else:
             raise NotImplementedError(f"Unsupported platform: {platform.system()} {platform.machine()}")
 

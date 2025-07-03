@@ -40,6 +40,33 @@ class TenVad:
                     "./ten_vad_library/libten_vad"
                 )
                 self.vad_library = CDLL(pip_path)
+        elif platform.system().upper() == 'WINDOWS':
+            if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
+                git_path = os.path.join(
+                    os.path.dirname(os.path.relpath(__file__)),
+                    "../lib/Windows/x64/ten_vad.dll"
+                )
+                if os.path.exists(git_path):
+                    self.vad_library = CDLL(git_path)
+                else:
+                    pip_path = os.path.join(
+                        os.path.dirname(os.path.relpath(__file__)),
+                        "./ten_vad_library/ten_vad.dll"
+                    )
+                    self.vad_library = CDLL(pip_path)
+            else:
+                git_path = os.path.join(
+                    os.path.dirname(os.path.relpath(__file__)),
+                    "../lib/Windows/x86/ten_vad.dll"
+                )
+                if os.path.exists(git_path):
+                    self.vad_library = CDLL(git_path)
+                else:
+                    pip_path = os.path.join(
+                        os.path.dirname(os.path.relpath(__file__)),
+                        "./ten_vad_library/ten_vad.dll"
+                    )
+                    self.vad_library = CDLL(pip_path)
         else:
             raise NotImplementedError(f"Unsupported platform: {platform.system()} {platform.machine()}")
         self.vad_handler = c_void_p(0)
