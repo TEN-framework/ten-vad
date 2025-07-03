@@ -43,27 +43,27 @@ class TenVad:
         elif platform.system().upper() == 'WINDOWS':
             if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
                 git_path = os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)),
+                    os.path.dirname(os.path.realpath(__file__)),
                     "../lib/Windows/x64/ten_vad.dll"
                 )
                 if os.path.exists(git_path):
                     self.vad_library = CDLL(git_path)
                 else:
                     pip_path = os.path.join(
-                        os.path.dirname(os.path.relpath(__file__)),
+                        os.path.dirname(os.path.realpath(__file__)),
                         "./ten_vad_library/ten_vad.dll"
                     )
                     self.vad_library = CDLL(pip_path)
             else:
                 git_path = os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)),
+                    os.path.dirname(os.path.realpath(__file__)),
                     "../lib/Windows/x86/ten_vad.dll"
                 )
                 if os.path.exists(git_path):
                     self.vad_library = CDLL(git_path)
                 else:
                     pip_path = os.path.join(
-                        os.path.dirname(os.path.relpath(__file__)),
+                        os.path.dirname(os.path.realpath(__file__)),
                         "./ten_vad_library/ten_vad.dll"
                     )
                     self.vad_library = CDLL(pip_path)
