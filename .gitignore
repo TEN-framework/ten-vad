@@ -4,6 +4,7 @@ examples/build-android/
 examples/build-linux/
 examples/build-windows/
 examples/build-web/
+examples_onnx/build-linux
 include/.DS_Store
 lib/.DS_Store
 examples/.DS_Store
