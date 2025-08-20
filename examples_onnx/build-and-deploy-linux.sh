@@ -20,7 +20,7 @@ if [[ ! -d "$ORT_ROOT" || ! -d "$ORT_ROOT/lib" || ! -d "$ORT_ROOT/include" ]]; t
     exit 1
 fi
 
-arch=x64
+arch=$(uname -m)
 build_dir=build-linux/$arch
 rm -rf $build_dir
 mkdir -p $build_dir
