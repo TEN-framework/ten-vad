@@ -34,30 +34,53 @@
 
 ## Table of Contents
 
+- [Latest News 🔥](#latest-news-)
+- [Table of Contents](#table-of-contents)
 - [Welcome to TEN](#welcome-to-ten)
 - [TEN Hugging Face Space](#ten-hugging-face-space)
-- [Introduction](#introduction)
-- [Key Features](#key-features)
-  - [High-Performance](#1-high-performance)
-  - [Agent-Friendly](#2-agent-friendly)
-  - [Lightweight](#3-lightweight)
-  - [Multiple Programming Languages and Platforms](#4-multiple-programming-languages-and-platforms)
-  - [Supported Sampling Rate and Hop Size](#5-supproted-sampling-rate-and-hop-size)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-  - [Python Usage](#python-usage)
-    - [Linux](#1-linux)
-  - [JS Usage](#js-usage)
-    - [Web](#1-web)
-  - [C Usage](#c-usage)
-    - [Linux](#1-linux-1)
-    - [Windows](#2-windows)
-    - [macOS](#3-macos)
-    - [Android](#4-android)
-    - [iOS](#5-ios)
+- [**Introduction**](#introduction)
+- [**Key Features**](#key-features)
+  - [**1. High-Performance:**](#1-high-performance)
+  - [**2. Agent-Friendly:**](#2-agent-friendly)
+  - [**3. Lightweight:**](#3-lightweight)
+  - [**4. Multiple programming languages and platforms:**](#4-multiple-programming-languages-and-platforms)
+  - [**5. Supported sampling rate and hop size:**](#5-supported-sampling-rate-and-hop-size)
+- [**Installation**](#installation)
+- [**Quick Start**](#quick-start)
+  - [**Python Usage**](#python-usage)
+    - [**1. Linux / macOS / Windows**](#1-linux--macos--windows)
+    - [**Requirements**](#requirements)
+    - [**Usage**](#usage)
+      - [**By using git clone:**](#by-using-git-clone)
+      - [**By using pip:**](#by-using-pip)
+  - [**JS Usage**](#js-usage)
+    - [**1. Web**](#1-web)
+      - [**Requirements**](#requirements-1)
+      - [**Usage**](#usage-1)
+  - [**C Usage**](#c-usage)
+    - [**Build Scripts**](#build-scripts)
+    - [**Dynamic Library Configuration**](#dynamic-library-configuration)
+    - [**Customization**](#customization)
+    - [**Overview of Usage**](#overview-of-usage)
+    - [**1. Linux**](#1-linux)
+      - [**Requirements**](#requirements-2)
+      - [**Usage (prebuilt-lib)**](#usage-prebuilt-lib)
+      - [**Usage (ONNX)**](#usage-onnx)
+    - [**2. Windows**](#2-windows)
+      - [**Requirements**](#requirements-3)
+      - [**Usage**](#usage-2)
+    - [**3. macOS**](#3-macos)
+      - [**Requirements**](#requirements-4)
+      - [**Usage**](#usage-3)
+    - [**4. Android**](#4-android)
+      - [**Requirements**](#requirements-5)
+      - [**Usage**](#usage-4)
+    - [**5. iOS**](#5-ios)
+      - [**Requirements**](#requirements-6)
+      - [**Usage**](#usage-5)
 - [TEN Ecosystem](#ten-ecosystem)
 - [Ask Questions](#ask-questions)
-- [Citations](#citations)
+- [**Citations**](#citations)
 - [License](#license)
 
 <br>
@@ -209,7 +232,7 @@ We evaluated the RTF (Real-Time Factor) across five distinct platforms, each equ
   <tr>
     <td> iPhone8 (A11) </td>
     <td align="center"> 0.0050 </td>
-  </tr> 
+  </tr>
 </table>
 <br>
 
@@ -219,7 +242,7 @@ TEN VAD provides cross-platform C compatibility across five operating systems (L
 <br>
 <br>
 
-### **5. Supproted sampling rate and hop size:**
+### **5. Supported sampling rate and hop size:**
 
 TEN VAD operates on 16kHz audio input with configurable hop sizes (optimized frame configurations: 160/256 samples=10/16ms). Other sampling rates must be resampled to 16kHz.
 <br>
@@ -463,6 +486,8 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 **Note 1**: If executing the onnx demo from a different directory than the one used when running build-and-deploy-linux.sh, ensure to create a symbolic link to src/onnx_model/ to prevent ONNX model file loading failures.
 <br>
 **Note 2**: The **ONNX model** locates in `src/onnx_model` directory.
+<br>
+**Note 3**: See [examples_onnx README](/examples_onnx/README.md).
 
 <br>
 

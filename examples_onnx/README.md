@@ -31,7 +31,7 @@ cd ten-vad/examples_onnx
 ./build-and-deploy-linux.sh --ort-path /home/$USER/onnxruntime-linux-$ARCH-$ONNX_VER
 ```
 
-## 4. Run.
+## 4. Run
 
 ```bash
 cd
