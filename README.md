@@ -33,6 +33,7 @@
 <br>
 
 ## Table of Contents
+
 - [Welcome to TEN](#welcome-to-ten)
 - [TEN Hugging Face Space](#ten-hugging-face-space)
 - [Introduction](#introduction)
