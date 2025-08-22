@@ -36,7 +36,7 @@ cd ten-vad/examples_onnx
 
 ```bash
 cd
-cd ten-vad/examples_onnx/build-linux/$ARCH
+cd ten-vad/examples_onnx/build-linux/$(uname -m)
 
 ./ten_vad_demo ../../../examples/s0724-s0730.wav out.txt
 ```
