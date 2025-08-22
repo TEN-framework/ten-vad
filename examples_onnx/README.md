@@ -2,7 +2,8 @@ Example build tested on Ubuntu 24.04.2 LTS.
 
 ## 1. Set environment variables
 ```bash
-ARCH=$(uname -m) && echo "Architecture: $ARCH"
+ARCH=$(uname -m) && if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi
+echo "Architecture: $ARCH"
 ONNX_VER=1.22.0  # Or 1.17.1
 ```
 
