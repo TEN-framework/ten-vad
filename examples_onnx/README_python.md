@@ -3,11 +3,12 @@ TEN VAD Python ONNX example
 This README describes linux build and demonstration of a Python extension
 module using Python bindings for TEN VAD C++/C source code and ONNX runtime.
 
-The build system is designed to work on these architectures.
-| Architecture    | Notes                                        |
-|-----------------|----------------------------------------------|
-| ARM64 (aarch64) | tested Ubuntu 24.04.2 LTS with Python 3.12.3 |
-| x64 (x86_64)    | should work                                  |
+The build system is designed to work on these CPU architectures.
+| Architecture    | Notes                      |
+|-----------------|----------------------------|
+| ARM64 (aarch64) | tested on Rockchip RK3588S |
+| x64 (x86_64)    | tested on Intel i5         |
+Test environment: Ubuntu 24.04.2 LTS with Python 3.12.3
 
 ## 1. Prerequisites
 
@@ -26,7 +27,8 @@ Download for your architecture to your home directory:
 This is automated with these environment variables.  Additional testing done
 with `ONNX_VER=1.17.1`.
  ```bash
-ARCH=$(uname -m) && echo "Architecture: $ARCH"
+ARCH=$(uname -m) && if [ "$ARCH" = "x86_64" ]; then ARCH="x64"; fi
+echo "Architecture: $ARCH"
 ONNX_VER=1.22.0
 
 cd
