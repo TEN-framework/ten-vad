@@ -1,7 +1,8 @@
 TEN VAD Python ONNX example
 
 This README describes linux build and demonstration of a Python extension
-module using Python bindings for TEN VAD C++/C source code and ONNX runtime.
+module using Python bindings for TEN VAD C++/C source code with external
+ONNX Runtime.
 
 The build system is designed to work on these CPU architectures.
 | Architecture    | Notes                      |
@@ -39,6 +40,7 @@ curl -OL https://github.com/microsoft/onnxruntime/releases/download/v$ONNX_VER/o
 tar -xzf onnxruntime-linux-$ARCH-$ONNX_VER.tgz
 rm onnxruntime-linux-$ARCH-$ONNX_VER.tgz
 ```
+The extracted ONNX Runtime folder is used for the following build and demo.
 
 ## 3. Build
 
@@ -74,12 +76,6 @@ cd build-python
 python3 -c 'import sys; sys.path.insert(0, "lib"); import ten_vad_python; print("Import success!")'
 ```
 
-Remove ONNX Runtime folder (optional clean-up).
-```bash
-cd
-rm -rf onnxruntime-linux-$ARCH-$ONNX_VER
-```
-
 ## 4. Demo
 
 Runs from the build directory.  The demo requires `numpy`, which is already
@@ -103,6 +99,9 @@ Create a new folder and copy three artifacts.
 * `lib/` folder from `build-python`
 * `onnx_model/` folder from `src`
 * `ten_vad_demo.py` script from `examples_onnx`
+
+Extract same version of ONNX Runtime to user's home folder (or different version
+and path you set with build script `--ort-path` option).
 
 Run demo script with `pip install numpy`.
 
@@ -177,7 +176,8 @@ print(f"Is voice: {is_voice}")
 - `ten_vad_demo.py` - Python usage example
 - `ten_vad_python.cc` - pybind11 wrapper
 
-Python usage example requires these files for ARM64 with Python 3.12.
+Python usage example `ten_vad_demo.py` requires the extracted ONNX Runtime
+folder and these files to run on Linux ARM64 with Python 3.12.
 ```console
 examples_onnx/build-python
 ├── lib
