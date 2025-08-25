@@ -138,10 +138,12 @@ From the build directory, run the Python demo:
 ```bash
 # Linux
 cd python/build-linux
+source ./venv/bin/activate  # For numpy
 python3 ten_vad_demo.py ../../../examples/s0724-s0730.wav out-python.txt
 
 # macOS
 cd python/build-macos
+source ./venv/bin/activate  # For numpy
 python3 ten_vad_demo.py ../../../examples/s0724-s0730.wav out-python.txt
 
 # With custom threshold on either Linux or macOS.
@@ -238,7 +240,7 @@ examples_onnx/
 ### Troubleshooting
 
 **Python Import Error**: Ensure the module is in your Python path and built for
-the correct Python version.
+the correct Python version.  Numpy is needed for WAV audio handling.
 
 **ONNX Runtime Not Found**: Verify the `--ort-path` points to a valid ONNX
 Runtime installation with `lib/` and `include/` directories.
