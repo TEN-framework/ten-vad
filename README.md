@@ -209,7 +209,7 @@ We evaluated the RTF (Real-Time Factor) across five distinct platforms, each equ
   <tr>
     <td> iPhone8 (A11) </td>
     <td align="center"> 0.0050 </td>
-  </tr> 
+  </tr>
 </table>
 <br>
 
@@ -456,13 +456,15 @@ You have to download the **onnxruntime** packages from the [microsoft official o
 You can check the official **ONNX Runtime releases** from [this website](https://github.com/microsoft/onnxruntime/tags). And for example, to download version 1.17.1 (Linux x64), use [this link](https://github.com/microsoft/onnxruntime/releases/download/v1.17.1/onnxruntime-linux-x64-1.17.1.tgz). After extracting the compressed file, you'll find two important directories:`include/` - header files, `lib/` - library files
 
 ```
-1) cd examples_onnx/
+1) cd examples_onnx/cpp
 2) ./build-and-deploy-linux.sh --ort-path /absolute/path/to/your/onnxruntime/root/dir
 ```
 
 **Note 1**: If executing the onnx demo from a different directory than the one used when running build-and-deploy-linux.sh, ensure to create a symbolic link to src/onnx_model/ to prevent ONNX model file loading failures.
 <br>
 **Note 2**: The **ONNX model** locates in `src/onnx_model` directory.
+<br>
+**Note 3**: For ONNX example builds see [examples_onnx/README.md](/examples_onnx/README.md).
 
 <br>
 
