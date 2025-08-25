@@ -4,21 +4,32 @@
 #  Licensed under the Apache License, Version 2.0, with certain conditions.
 #  Refer to the "LICENSE" file in the root directory for more information.
 #
-cmake_minimum_required(VERSION 3.10)
-get_filename_component(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../ ABSOLUTE)
+# Root CMakeLists.txt for TEN VAD ONNX examples
+# Supports building either C++ demo or Python bindings
 
-project(ten_vad)
+cmake_minimum_required(VERSION 3.12)
+project(ten_vad_examples)
 
-set(CMAKE_BUILD_TYPE Release)
-add_compile_options(-Wno-write-strings -Wno-unused-result)
-include_directories(${ROOT}/src)
-include_directories(${ROOT}/include)
-include_directories(${ORT_ROOT}/include)
-file(GLOB LIBRARY_SOURCES "${ROOT}/src/*.cc" "${ROOT}/src/*.c")
-add_library(ten_vad SHARED ${LIBRARY_SOURCES})
-link_directories(${ORT_ROOT}/lib)
-target_link_libraries(ten_vad "${ORT_ROOT}/lib/libonnxruntime.so")
+# Build options
+option(BUILD_CPP_DEMO "Build C++ demo executable" ON)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 
-set(EXECUTABLE_SOURCES ${ROOT}/examples/main.c)
-add_executable(ten_vad_demo ${EXECUTABLE_SOURCES})
-target_link_libraries(ten_vad_demo ten_vad)
+# Ensure only one target is built at a time
+if(BUILD_CPP_DEMO AND BUILD_PYTHON_BINDINGS)
+    message(FATAL_ERROR "Cannot build both targets simultaneously. Choose either BUILD_CPP_DEMO or BUILD_PYTHON_BINDINGS.")
+endif()
+
+if(NOT BUILD_CPP_DEMO AND NOT BUILD_PYTHON_BINDINGS)
+    message(FATAL_ERROR "At least one target must be enabled. Set BUILD_CPP_DEMO=ON or BUILD_PYTHON_BINDINGS=ON.")
+endif()
+
+# Build the selected target
+if(BUILD_CPP_DEMO)
+    message(STATUS "Building C++ demo")
+    add_subdirectory(cpp)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+    message(STATUS "Building Python bindings")
+    add_subdirectory(python)
+endif()
