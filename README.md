@@ -123,9 +123,9 @@ The precision-recall curves comparing the performance of WebRTC VAD (pitch-based
 Note that the default threshold of 0.5 is used to generate binary speech indicators (0 for non-speech signal, 1 for speech signal). This threshold needs to be tuned according to your domain-specific task. 
 
 
-#### **1.1 Performance Comparison**
+### **1.1 Performance Comparison**
 
-Developers can reproduce the performance comparison PR curves for **TEN VAD**, **Silero VAD**, and **WebRTC VAD** on the open-source testset (as shown in the figure above) by executing the following script on Linux x64 in a single one line of code.The output figure will be saved in the same directory as the script.
+Developers can reproduce the performance comparison PR curves for **TEN VAD** and **Silero VAD** on the open-source testset (as shown in the figure above) by executing the following script on Linux x64 with a single one line of code. The output figure will be saved in the same directory as the script.
 
 ```
 cd ./examples
@@ -236,7 +236,6 @@ TEN VAD operates on 16kHz audio input with configurable hop sizes (optimized fra
 > *"We selected TEN VAD because it provides faster and more accurate sentence-end detection in Japanese compared to other VADs, while still being lightweight and fast enough for live use."* - LiveCap,Hakase shojo.
 
 > *"TEN VAD's overall performance is better than Silero VAD. Its high accuracy and low resource consumption helped us improve efficiency and significantly reduce costs."* - Rustpbx.
-<br>
 <br>
 
 ## **Installation**
