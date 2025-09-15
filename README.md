@@ -41,8 +41,8 @@
     - [Performance Comparison](#11-performance-comparison)
   - [Agent-Friendly](#2-agent-friendly)
   - [Lightweight](#3-lightweight)
-  - [Multiple programming languages and platforms](#4-multiple-programming-languages-and-platforms)
-  - [Supproted sampling rate and hop size](#5-supproted-sampling-rate-and-hop-size)
+  - [Multiple Programming Languages and Platforms](#4-multiple-programming-languages-and-platforms)
+  - [Supported Sampling Rate and Hop Size](#5-supported-sampling-rate-and-hop-size)
 - [Developers Testimonial](#developers-testimonial)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
@@ -219,13 +219,13 @@ We evaluated the RTF (Real-Time Factor) across five distinct platforms, each equ
 </table>
 <br>
 
-### **4. Multiple programming languages and platforms:**
+### **4. Multiple Programming Languages and Platforms:**
 
 TEN VAD provides cross-platform C compatibility across five operating systems (Linux x64, Windows, macOS, Android, iOS), with Python bindings optimized for Linux x64, with wasm for Web.
 <br>
 <br>
 
-### **5. Supproted sampling rate and hop size:**
+### **5. Supported Sampling Rate and Hop Size:**
 
 TEN VAD operates on 16kHz audio input with configurable hop sizes (optimized frame configurations: 160/256 samples=10/16ms). Other sampling rates must be resampled to 16kHz.
 <br>
