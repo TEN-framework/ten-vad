@@ -39,10 +39,12 @@
 - [Introduction](#introduction)
 - [Key Features](#key-features)
   - [High-Performance](#1-high-performance)
+    - [Performance Comparison](#11-performance-comparison)
   - [Agent-Friendly](#2-agent-friendly)
   - [Lightweight](#3-lightweight)
   - [Multiple Programming Languages and Platforms](#4-multiple-programming-languages-and-platforms)
   - [Supported Sampling Rate and Hop Size](#5-supproted-sampling-rate-and-hop-size)
+- [Developers Testimonial](#developers-testimonial)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
   - [Python Usage](#python-usage)
@@ -118,7 +120,12 @@ The precision-recall curves comparing the performance of WebRTC VAD (pitch-based
   <img src="./examples/images/PR_Curves_testset.png" width="800">
 </div>
 
-Note that the default threshold of 0.5 is used to generate binary speech indicators (0 for non-speech signal, 1 for speech signal). This threshold needs to be tuned according to your domain-specific task. The precision-recall curve can be obtained by executing the following script on Linux x64. The output figure will be saved in the same directory as the script.
+Note that the default threshold of 0.5 is used to generate binary speech indicators (0 for non-speech signal, 1 for speech signal). This threshold needs to be tuned according to your domain-specific task. 
+
+
+#### **1.1 Performance Comparison**
+
+Developers can reproduce the performance comparison PR curves for **TEN VAD**, **Silero VAD**, and **WebRTC VAD** on the open-source testset (as shown in the figure above) by executing the following script on Linux x64 in a single one line of code.The output figure will be saved in the same directory as the script.
 
 ```
 cd ./examples
@@ -222,6 +229,13 @@ TEN VAD provides cross-platform C compatibility across five operating systems (L
 ### **5. Supproted sampling rate and hop size:**
 
 TEN VAD operates on 16kHz audio input with configurable hop sizes (optimized frame configurations: 160/256 samples=10/16ms). Other sampling rates must be resampled to 16kHz.
+<br>
+<br>
+
+## **Developers Testimonial**
+> *"We selected TEN VAD because it provides faster and more accurate sentence-end detection in Japanese compared to other VADs, while still being lightweight and fast enough for live use."* - LiveCap,Hakase shojo.
+
+> *"TEN VAD's overall performance is better than Silero VAD. Its high accuracy and low resource consumption helped us improve efficiency and significantly reduce costs."* - Rustpbx.
 <br>
 <br>
 
