@@ -5,6 +5,7 @@
 // Refer to the "LICENSE" file in the root directory for more information.
 //
 
+
 // import com.ten.vad.TenVad; // Uncomment when using package structure
 import javax.sound.sampled.*;
 import java.io.*;
@@ -37,8 +38,8 @@ public class TestTenVad {
         String outputFile = args[1];
         
         try {
-            // Print library version
-            System.out.println("TEN VAD Version: " + TenVad.getVersion());
+            // Print debug information
+            TenVad.printDebugInfo();            
             
             // Create VAD instance
             TenVad vad = new TenVad(HOP_SIZE, THRESHOLD);

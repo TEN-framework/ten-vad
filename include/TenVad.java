@@ -6,9 +6,14 @@
 //
 
 // Package declaration removed for compatibility
+package com.ten.vad;
 
 import java.io.File;
 import java.nio.file.Paths;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
 
 /**
  * TEN VAD Java wrapper class for voice activity detection.
@@ -25,7 +30,7 @@ public class TenVad {
         loadNativeLibrary();
     }
     
-    private long vadHandle = 0;
+    private Pointer vadHandle = null;
     private int hopSize;
     private float threshold;
     
@@ -35,11 +40,10 @@ public class TenVad {
     private static void loadNativeLibrary() {
         String osName = System.getProperty("os.name").toLowerCase();
         String osArch = System.getProperty("os.arch").toLowerCase();
-        String libraryName = getLibraryName(osName, osArch);
         
         try {
             // Try to load from the lib directory first
-            String libPath = getLibraryPath(libraryName);
+            String libPath = getLibraryPath(osName, osArch);
             if (libPath != null && new File(libPath).exists()) {
                 System.load(libPath);
             } else {
@@ -47,48 +51,81 @@ public class TenVad {
                 System.loadLibrary("ten_vad");
             }
         } catch (UnsatisfiedLinkError e) {
-            throw new RuntimeException("Failed to load TEN VAD native library: " + e.getMessage(), e);
+            String errorMsg = "Failed to load TEN VAD native library for " + osName + " " + osArch + 
+                            ". Please ensure the native library is available in the lib/ directory.";
+            throw new RuntimeException(errorMsg + " Error: " + e.getMessage(), e);
         }
     }
     
     /**
-     * Get the appropriate library name for the current platform.
+     * Get the full path to the native library based on platform detection.
      */
-    private static String getLibraryName(String osName, String osArch) {
-        if (osName.contains("windows")) {
-            return "ten_vad.dll";
-        } else if (osName.contains("mac")) {
-            return "libten_vad.dylib";
-        } else if (osName.contains("linux")) {
-            return "libten_vad.so";
-        } else {
-            throw new UnsupportedOperationException("Unsupported operating system: " + osName);
-        }
-    }
-    
-    /**
-     * Get the full path to the native library.
-     */
-    private static String getLibraryPath(String libraryName) {
+    private static String getLibraryPath(String osName, String osArch) {
         try {
+           
             // Get the directory containing the current class
             String currentDir = Paths.get(TenVad.class.getProtectionDomain()
-                .getCodeSource().getLocation().toURI()).getParent().toString();
-            
-            // Try different possible library locations
-            String[] possiblePaths = {
-                Paths.get(currentDir, "lib", "Linux", "x64", libraryName).toString(),
-                Paths.get(currentDir, "lib", "Windows", "x64", libraryName).toString(),
-                Paths.get(currentDir, "lib", "Windows", "x86", libraryName).toString(),
-                Paths.get(currentDir, "lib", "macOS", "ten_vad.framework", "ten_vad").toString(),
-                Paths.get(currentDir, "lib", "Android", "arm64-v8a", libraryName).toString(),
-                Paths.get(currentDir, "lib", "Android", "armeabi-v7a", libraryName).toString(),
-                Paths.get(currentDir, "lib", "iOS", "ten_vad.framework", "ten_vad").toString()
-            };
-            
-            for (String path : possiblePaths) {
-                if (new File(path).exists()) {
-                    return path;
+                .getCodeSource().getLocation().toURI()).toString();
+            // Platform-specific library paths (similar to Python version)
+            if (osName.contains("linux") && osArch.contains("amd64")) {
+                // Linux x64
+                String[] paths = {
+                    Paths.get(currentDir, "lib", "Linux", "x64", "libten_vad.so").toString(),
+                    Paths.get(currentDir, "..", "lib", "Linux", "x64", "libten_vad.so").toString()
+                };
+                for (String path : paths) {
+                    if (new File(path).exists()) return path;
+                }
+            } else if (osName.contains("windows")) {
+                // Windows
+                if (osArch.contains("amd64") || osArch.contains("x86_64")) {
+                    // Windows x64
+                    String[] paths = {
+                        Paths.get(currentDir, "lib", "Windows", "x64", "ten_vad.dll").toString(),
+                        Paths.get(currentDir, "..", "lib", "Windows", "x64", "ten_vad.dll").toString()
+                    };
+                    for (String path : paths) {
+                        if (new File(path).exists()) return path;
+                    }
+                } else {
+                    // Windows x86
+                    String[] paths = {
+                        Paths.get(currentDir, "lib", "Windows", "x86", "ten_vad.dll").toString(),
+                        Paths.get(currentDir, "..", "lib", "Windows", "x86", "ten_vad.dll").toString()
+                    };
+                    for (String path : paths) {
+                        if (new File(path).exists()) return path;
+                    }
+                }
+            } else if (osName.contains("mac")) {
+                // macOS
+                String[] paths = {
+                    Paths.get(currentDir, "lib", "macOS", "ten_vad.framework", "ten_vad").toString(),
+                    Paths.get(currentDir, "..", "lib", "macOS", "ten_vad.framework", "ten_vad").toString()
+                };
+                for (String path : paths) {
+                    if (new File(path).exists()) return path;
+                }
+            } else if (osName.contains("android")) {
+                // Android
+                if (osArch.contains("aarch64")) {
+                    // Android arm64-v8a
+                    String[] paths = {
+                        Paths.get(currentDir, "lib", "Android", "arm64-v8a", "libten_vad.so").toString(),
+                        Paths.get(currentDir, "..", "lib", "Android", "arm64-v8a", "libten_vad.so").toString()
+                    };
+                    for (String path : paths) {
+                        if (new File(path).exists()) return path;
+                    }
+                } else {
+                    // Android armeabi-v7a
+                    String[] paths = {
+                        Paths.get(currentDir, "lib", "Android", "armeabi-v7a", "libten_vad.so").toString(),
+                        Paths.get(currentDir, "..", "lib", "Android", "armeabi-v7a", "libten_vad.so").toString()
+                    };
+                    for (String path : paths) {
+                        if (new File(path).exists()) return path;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -108,12 +145,12 @@ public class TenVad {
         this.hopSize = hopSize;
         this.threshold = threshold;
         
-        long[] handle = new long[1];
-        int result = tenVadCreate(handle, hopSize, threshold);
+        PointerByReference handle = new PointerByReference();
+        int result = ten_vad_create(handle, hopSize, threshold);
         if (result != 0) {
-            throw new RuntimeException("Failed to create TEN VAD instance");
+            throw new RuntimeException("Failed to create TEN VAD instance: " + result);
         }
-        this.vadHandle = handle[0];
+        this.vadHandle = handle.getValue();
     }
     
     /**
@@ -133,7 +170,7 @@ public class TenVad {
         float[] probability = new float[1];
         int[] flag = new int[1];
         
-        int result = tenVadProcess(vadHandle, audioData, audioData.length, probability, flag);
+        int result = ten_vad_process(this.vadHandle, audioData, audioData.length, probability, flag);
         if (result != 0) {
             throw new RuntimeException("Failed to process audio frame");
         }
@@ -147,7 +184,63 @@ public class TenVad {
      * @return Version string (e.g., "1.0.0")
      */
     public static String getVersion() {
-        return tenVadGetVersion();
+        return ten_vad_get_version();
+    }
+    
+    /**
+     * Debug method to print platform information and library search paths.
+     * This can help diagnose library loading issues.
+     */
+    public static void printDebugInfo() {
+        String osName = System.getProperty("os.name");
+        String osArch = System.getProperty("os.arch");
+        String javaVersion = System.getProperty("java.version");
+        
+        System.out.println("=== TEN VAD Debug Information ===");
+        System.out.println("OS Name: " + osName);
+        System.out.println("OS Architecture: " + osArch);
+        System.out.println("Java Version: " + javaVersion);
+        
+        try {
+            String currentDir = Paths.get(TenVad.class.getProtectionDomain()
+                .getCodeSource().getLocation().toURI()).toString();
+            System.out.println("Current Directory: " + currentDir);
+            
+            // Check for library files
+            String[] searchPaths = {
+                Paths.get(currentDir, "lib").toString(),
+                Paths.get(currentDir, "..", "lib").toString()
+            };
+            
+            for (String searchPath : searchPaths) {
+                File libDir = new File(searchPath);
+                if (libDir.exists()) {
+                    System.out.println("Library directory found: " + searchPath);
+                    listLibraryFiles(libDir, "");
+                } else {
+                    System.out.println("Library directory not found: " + searchPath);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error getting debug info: " + e.getMessage());
+        }
+        System.out.println("================================");
+    }
+    
+    private static void listLibraryFiles(File dir, String prefix) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    listLibraryFiles(file, prefix + "  ");
+                } else if (file.getName().contains("ten_vad") || 
+                          file.getName().endsWith(".so") || 
+                          file.getName().endsWith(".dll") || 
+                          file.getName().endsWith(".dylib")) {
+                    System.out.println(prefix + "Found: " + file.getAbsolutePath());
+                }
+            }
+        }
     }
     
     /**
@@ -173,10 +266,9 @@ public class TenVad {
      * This method should be called when the instance is no longer needed.
      */
     public void destroy() {
-        if (vadHandle != 0) {
-            long[] handle = {vadHandle};
-            tenVadDestroy(handle);
-            vadHandle = 0;
+        if (this.vadHandle != null) {
+            ten_vad_destroy(this.vadHandle);
+            this.vadHandle = null;
         }
     }
     
@@ -184,7 +276,7 @@ public class TenVad {
      * Finalizer to ensure resources are released.
      * @deprecated Use try-with-resources or explicit destroy() calls instead
      */
-    @Deprecated(since = "9")
+    @Deprecated
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -195,11 +287,11 @@ public class TenVad {
     }
     
     // Native method declarations
-    private native int tenVadCreate(long[] handle, int hopSize, float threshold);
-    private native int tenVadProcess(long handle, short[] audioData, int audioDataLength, 
+    private native int ten_vad_create(PointerByReference handle, int hopSize, float threshold);
+    private native int ten_vad_process(Pointer handle, short[] audioData, int audioDataLength, 
                                    float[] outProbability, int[] outFlag);
-    private native int tenVadDestroy(long[] handle);
-    private static native String tenVadGetVersion();
+    private native int ten_vad_destroy(Pointer handle);
+    private static native String ten_vad_get_version();
     
     /**
      * Result class containing VAD processing results.
