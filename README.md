@@ -50,6 +50,7 @@
     - [Linux](#1-linux--macos--windows)
   - [JS Usage](#js-usage)
     - [Web](#1-web)
+  - [Java Usage](#java-usage)
   - [C Usage](#c-usage)
     - [Linux](#1-linux)
     - [Windows](#2-windows)
@@ -262,22 +263,22 @@ The project supports five major platforms with dynamic library linking.
     <th align="center"> Linux </th>
     <td align="center"> libten_vad.so </td>
     <td align="center"> x64 </td>
-    <td align="center"> Python, C </td>
-    <td rowspan="6">ten_vad.h <br> ten_vad.py <br> ten_vad.js</td>
+    <td align="center"> Python, C, Java </td>
+    <td rowspan="6">ten_vad.h <br> ten_vad.py <br> ten_vad.js <br> TenVad.java</td>
     <td>  </td>
   </tr>
   <tr>
     <th align="center"> Windows </th>
     <td align="center"> ten_vad.dll </td>
     <td align="center"> x64, x86 </td>
-    <td align="center"> C </td>
+    <td align="center"> C, Java </td>
     <td>  </td>
   </tr>
   <tr>
     <th align="center"> macOS </th>
     <td align="center"> ten_vad.framework </td>
     <td align="center"> arm64, x86_64 </td>
-    <td align="center"> C </td>
+    <td align="center"> C, Java </td>
     <td>  </td>
   </tr>
   <tr>
@@ -291,7 +292,7 @@ The project supports five major platforms with dynamic library linking.
     <th align="center"> Android </th>
     <td align="center"> libten_vad.so </td>
     <td align="center"> arm64-v8a, armeabi-v7a </td>
-    <td align="center"> C </td>
+    <td align="center"> C, Java </td>
     <td>  </td>
   </tr>
   <tr>
@@ -396,6 +397,83 @@ from ten_vad import TenVad
 ```
 1) cd ./examples
 2) node test_node.js s0724-s0730.wav out.txt
+```
+
+<br>
+
+### **Java Usage**
+
+TEN VAD provides comprehensive Java support with JNI (Java Native Interface) bindings for all major platforms.
+
+#### **Requirements**
+
+- Java 8 or higher
+- Native libraries in `lib/` directory
+- JNI headers
+
+#### **Compilation**
+
+```bash
+# Compile Java source
+javac -cp . include/TenVad.java examples/TestTenVad.java
+
+# Run example
+java -cp . -Djava.library.path=lib TestTenVad s0724-s0730.wav out.txt
+```
+
+#### **Example Code**
+
+```java
+import com.ten.vad.TenVad;
+
+public class VADExample {
+    public static void main(String[] args) {
+        // Create VAD instance
+        TenVad vad = new TenVad(256, 0.5f);
+        
+        // Process audio frame
+        short[] audioFrame = new short[256]; // 16ms at 16kHz
+        // ... fill audioFrame with audio data ...
+        
+        TenVad.VadResult result = vad.process(audioFrame);
+        System.out.println("Probability: " + result.getProbability());
+        System.out.println("Voice detected: " + result.isVoiceDetected());
+        
+        // Clean up
+        vad.destroy();
+    }
+}
+```
+
+#### **Platform-Specific Notes**
+
+- **Linux**: Requires `libc++1` package
+- **Windows**: Ensure Visual C++ Redistributable is installed
+- **macOS**: No additional requirements
+- **Android**: Use Android NDK for native library integration
+
+#### **API Reference**
+
+```java
+public class TenVad {
+    // Constructor
+    public TenVad(int hopSize, float threshold)
+    
+    // Process audio frame
+    public VadResult process(short[] audioData)
+    
+    // Get library version
+    public static String getVersion()
+    
+    // Cleanup
+    public void destroy()
+}
+
+public static class VadResult {
+    public float getProbability()    // [0.0, 1.0]
+    public int getFlag()            // 0 or 1
+    public boolean isVoiceDetected() // true if voice detected
+}
 ```
 
 <br>
