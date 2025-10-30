@@ -37,9 +37,7 @@ public class TestTenVad {
         String inputFile = args[0];
         String outputFile = args[1];
         
-        try {
-            // Print debug information
-            TenVad.printDebugInfo();            
+        try {          
             
             // Create VAD instance
             TenVad vad = new TenVad(HOP_SIZE, THRESHOLD);
