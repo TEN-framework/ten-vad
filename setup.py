@@ -30,7 +30,8 @@ with open(os.path.join(root_dir, "README.md"), "r", encoding="utf-8") as f:
 
 setup(
     name="ten_vad",
-    version="1.0.6.6",
+    version="1.0.6.7",
+    description="Voice Activity Detector (VAD) : low-latency, high-performance and lightweight",
     packages=["ten_vad"],
     package_data={
         "ten_vad": [
