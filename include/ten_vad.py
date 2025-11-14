@@ -13,62 +13,63 @@ class TenVad:
     def __init__(self, hop_size: int = 256, threshold: float = 0.5):
         self.hop_size = hop_size
         self.threshold = threshold
+        
+        # Get the directory where this module is installed
+        module_dir = os.path.dirname(os.path.abspath(__file__))
+        
         if platform.system() == "Linux" and platform.machine() == "x86_64":
-            git_path = os.path.join(
-                os.path.dirname(os.path.relpath(__file__)),
-                "../lib/Linux/x64/libten_vad.so"
-            )
+            # Try git repo structure first
+            git_path = os.path.join(module_dir, "../lib/Linux/x64/libten_vad.so")
+            # Try installed package structure (lib directory is inside the package)
+            pip_path = os.path.join(module_dir, "lib/Linux/x64/libten_vad.so")
+            
             if os.path.exists(git_path):
                 self.vad_library = CDLL(git_path)
-            else:
-                pip_path = os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)),
-                    "./ten_vad_library/libten_vad.so"
-                )
+            elif os.path.exists(pip_path):
                 self.vad_library = CDLL(pip_path)
+            else:
+                raise FileNotFoundError("Cannot find libten_vad.so at {} or {}".format(git_path, pip_path))
                 
         elif platform.system() == "Darwin":
-            git_path = os.path.join(
-                os.path.dirname(os.path.relpath(__file__)),
-                "../lib/macOS/ten_vad.framework/Versions/A/ten_vad"
-            )
+            # Try git repo structure first
+            git_path = os.path.join(module_dir, "../lib/macOS/ten_vad.framework/Versions/A/ten_vad")
+            # Try installed package structure
+            pip_path = os.path.join(module_dir, "lib/macOS/ten_vad.framework/Versions/A/ten_vad")
+            
             if os.path.exists(git_path):
                 self.vad_library = CDLL(git_path)
-            else:
-                pip_path = os.path.join(
-                    os.path.dirname(os.path.relpath(__file__)),
-                    "./ten_vad_library/libten_vad"
-                )
+            elif os.path.exists(pip_path):
                 self.vad_library = CDLL(pip_path)
+            else:
+                raise FileNotFoundError("Cannot find libten_vad at {} or {}".format(git_path, pip_path))
+                
         elif platform.system().upper() == 'WINDOWS':
             if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
-                git_path = os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "../lib/Windows/x64/ten_vad.dll"
-                )
+                # Try git repo structure first
+                git_path = os.path.join(module_dir, "../lib/Windows/x64/ten_vad.dll")
+                # Try installed package structure
+                pip_path = os.path.join(module_dir, "lib/Windows/x64/ten_vad.dll")
+                
                 if os.path.exists(git_path):
                     self.vad_library = CDLL(git_path)
-                else:
-                    pip_path = os.path.join(
-                        os.path.dirname(os.path.realpath(__file__)),
-                        "./ten_vad_library/ten_vad.dll"
-                    )
+                elif os.path.exists(pip_path):
                     self.vad_library = CDLL(pip_path)
+                else:
+                    raise FileNotFoundError("Cannot find ten_vad.dll at {} or {}".format(git_path, pip_path))
             else:
-                git_path = os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "../lib/Windows/x86/ten_vad.dll"
-                )
+                # Try git repo structure first
+                git_path = os.path.join(module_dir, "../lib/Windows/x86/ten_vad.dll")
+                # Try installed package structure
+                pip_path = os.path.join(module_dir, "lib/Windows/x86/ten_vad.dll")
+                
                 if os.path.exists(git_path):
                     self.vad_library = CDLL(git_path)
-                else:
-                    pip_path = os.path.join(
-                        os.path.dirname(os.path.realpath(__file__)),
-                        "./ten_vad_library/ten_vad.dll"
-                    )
+                elif os.path.exists(pip_path):
                     self.vad_library = CDLL(pip_path)
+                else:
+                    raise FileNotFoundError("Cannot find ten_vad.dll at {} or {}".format(git_path, pip_path))
         else:
-            raise NotImplementedError(f"Unsupported platform: {platform.system()} {platform.machine()}")
+            raise NotImplementedError("Unsupported platform: {} {}".format(platform.system(), platform.machine()))
         self.vad_handler = c_void_p(0)
         self.out_probability = c_float()
         self.out_flags = c_int32()
@@ -116,9 +117,7 @@ class TenVad:
         assert (
             len(audio_data.shape) == 1 
             and audio_data.shape[0] == self.hop_size
-        ), "[TEN VAD]: audio data shape should be [%d]" % (
-            self.hop_size
-        )
+        ), "[TEN VAD]: audio data shape should be [{}]".format(self.hop_size)
         assert (
             type(audio_data[0]) == np.int16
         ), "[TEN VAD]: audio data type error, must be int16"

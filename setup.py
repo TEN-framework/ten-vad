@@ -5,42 +5,46 @@
 #  Refer to the "LICENSE" file in the root directory for more information.
 #
 from setuptools import setup
-import os, shutil, platform
-from setuptools.command.install import install
-
-class custom_install_command(install):
-    def run(self):
-        install.run(self)
-        target_dir = os.path.join(self.install_lib, "ten_vad_library")
-        os.makedirs(target_dir, exist_ok=True)
-        
-        if platform.system() == "Linux" and platform.machine() == "x86_64":
-            shutil.copy("lib/Linux/x64/libten_vad.so", target_dir)
-            print(f"Linux x64 library installed to: {target_dir}")
-        elif platform.system() == "Darwin":
-            shutil.copy("lib/macOS/ten_vad.framework/Versions/A/ten_vad", 
-                       os.path.join(target_dir, "libten_vad"))
-            print(f"macOS library installed to: {target_dir}")
-        elif platform.system().upper() == 'WINDOWS':
-            if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
-                shutil.copy("lib/Windows/x64/ten_vad.dll", 
-                       os.path.join(target_dir, "ten_vad.dll"))
-                print(f"Windows x64 library installed to: {target_dir}")
-            else:
-                shutil.copy("lib/Windows/x86/ten_vad.dll", 
-                       os.path.join(target_dir, "ten_vad.dll"))
-                print(f"Windows x86 library installed to: {target_dir}")
-        else:
-            raise NotImplementedError(f"Unsupported platform: {platform.system()} {platform.machine()}")
+import os, shutil
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-shutil.copy(f"{root_dir}/include/ten_vad.py", f"{root_dir}/ten_vad.py")
+
+# Create a ten_vad package directory structure
+package_dir = os.path.join(root_dir, "ten_vad")
+os.makedirs(package_dir, exist_ok=True)
+
+# Copy the Python interface as __init__.py
+shutil.copy("{}/include/ten_vad.py".format(root_dir), "{}/__init__.py".format(package_dir))
+
+# Copy entire lib directory structure to package, excluding unwanted platforms
+lib_src = os.path.join(root_dir, "lib")
+lib_dst = os.path.join(package_dir, "lib")
+if os.path.exists(lib_dst):
+    shutil.rmtree(lib_dst)
+shutil.copytree(lib_src, lib_dst, 
+                ignore=shutil.ignore_patterns('Android', 'iOS', 'Web', '*.lib'))
+
+# Read the README for long description
+with open(os.path.join(root_dir, "README.md"), "r", encoding="utf-8") as f:
+    long_description = f.read()
+
 setup(
     name="ten_vad",
-    version="1.0",
-    py_modules=["ten_vad"],
-    cmdclass={
-        "install": custom_install_command,
+    version="1.0.6.6",
+    packages=["ten_vad"],
+    package_data={
+        "ten_vad": [
+            "lib/Linux/x64/*.so",
+            "lib/Windows/x64/*.dll",
+            "lib/Windows/x86/*.dll",
+            "lib/macOS/ten_vad.framework/Versions/A/ten_vad",
+        ],
     },
+    include_package_data=True,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
 )
-os.remove(f"{root_dir}/ten_vad.py")
+
+# Cleanup temporary package directory
+if os.path.exists(package_dir):
+    shutil.rmtree(package_dir)
