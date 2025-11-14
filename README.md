@@ -111,9 +111,7 @@ The precision-recall curves comparing the performance of WebRTC VAD (pitch-based
 
  <br>
 
-<div style="text-align:">
-  <img src="./examples/images/PR_Curves_testset.png" width="800">
-</div>
+![PR Curves Performance Comparison](https://github.com/TEN-framework/ten-vad/raw/main/examples/images/PR_Curves_testset.png)
 
 Note that the default threshold of 0.5 is used to generate binary speech indicators (0 for non-speech signal, 1 for speech signal). This threshold needs to be tuned according to your domain-specific task. 
 
@@ -133,9 +131,7 @@ python plot_pr_curves.py
 
 As illustrated in the figure below, TEN VAD rapidly detects speech-to-non-speech transitions, whereas Silero VAD suffers from a delay of several hundred milliseconds, resulting in increased end-to-end latency in human-agent interaction systems. In addition, as demonstrated in the 6.5s-7.0s audio segment, Silero VAD fails to identify short silent durations between adjacent speech segments.
 
-<div style="text-align:">
-  <img src="./examples/images/Agent-Friendly-image.png" width="800">
-</div>
+![Agent-Friendly Response](https://github.com/TEN-framework/ten-vad/raw/main/examples/images/Agent-Friendly-image.png)
 <br>
 
 ### **3. Lightweight:**
@@ -561,9 +557,7 @@ cd ./examples
 
     3.2. In Xcode IDE, select ten_vad_demo target (should check: Edit Scheme → Run → Release), then select your iOS Device (not simulator).
 
-    <div style="text-align:">
-      <img src="./examples/images/ios_image_1.jpg" width="800">
-    </div>
+    ![iOS Setup Image 1](https://github.com/TEN-framework/ten-vad/raw/main/examples/images/ios_image_1.jpg)
 
     3.3. Drag ten_vad/lib/iOS/ten_vad.framework to "Frameworks, Libraries, and Embedded Content"
 
@@ -573,9 +567,7 @@ cd ./examples
 
     - Note: If this step is not completed, you may encounter the following runtime error: "dyld: Library not loaded: @rpath/ten_vad.framework/ten_vad".
 
-          <div style="text-align:">
-            <img src="./examples/images/ios_image_2.png" width="800">
-          </div>
+    ![iOS Setup Image 2](https://github.com/TEN-framework/ten-vad/raw/main/examples/images/ios_image_2.png)
 
       3.4. Configure iOS device Signature
 
