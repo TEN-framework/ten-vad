@@ -21,6 +21,7 @@
 <br>
 
 ## Latest News 🔥
+- [2025/11] We supported **Python** inference with **ONNX model** on **Linux**, **macOS** thanks to [Guy Nicholson](https://github.com/guynich)!
 - [2025/11] We supported **Golang** on **Linux**, **macOS** and **Windows** with usage of the prebuilt-libs thanks to [hylarucoder](https://github.com/hylarucoder)!
 - [2025/11] We supported **Java** on **Linux**, **macOS**, **Windows**, **Android** with usage of the prebuilt-libs thanks to [ZhangYang(arthasking123)](https://github.com/arthasking123)!
 - [2025/07] 🎉 Exciting news! **TEN VAD** is now **integrated** into [**k2-fsa/sherpa-onnx**](https://github.com/k2-fsa/sherpa-onnx), thanks to the fantastic work by [Fangjun Kuang](https://github.com/csukuangfj)! You can now achieve more precise speech segment extraction and enjoy an enhanced ASR experience! Refer to the [documentation](https://k2-fsa.github.io/sherpa/onnx/vad/ten-vad.html#) and give it a try!
