@@ -255,7 +255,7 @@ The project supports five major platforms with dynamic library linking.
     <th align="center"> Linux </th>
     <td align="center"> libten_vad.so </td>
     <td align="center"> x64 </td>
-    <td align="center"> Python, C, Java </td>
+    <td align="center"> Python, C, Java, Go </td>
     <td rowspan="6">ten_vad.h <br> ten_vad.py <br> ten_vad.js <br> TenVad.java</td>
     <td>  </td>
   </tr>
@@ -263,14 +263,14 @@ The project supports five major platforms with dynamic library linking.
     <th align="center"> Windows </th>
     <td align="center"> ten_vad.dll </td>
     <td align="center"> x64, x86 </td>
-    <td align="center"> C, Java </td>
+    <td align="center"> C, Java, Go </td>
     <td>  </td>
   </tr>
   <tr>
     <th align="center"> macOS </th>
     <td align="center"> ten_vad.framework </td>
     <td align="center"> arm64, x86_64 </td>
-    <td align="center"> C, Java </td>
+    <td align="center"> C, Java, Go </td>
     <td>  </td>
   </tr>
   <tr>
