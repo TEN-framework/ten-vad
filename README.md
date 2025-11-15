@@ -474,6 +474,23 @@ public static class VadResult {
 
 <br>
 
+
+### **Go (Golang) Usage**
+#### **Usage with compilation**
+```
+cd examples/go-tenvad
+go build -o tenvad .
+./tenvad
+```
+#### **Usage without compilation**
+```
+cd examples/go-tenvad
+export LD_LIBRARY_PATH=../../lib/Linux/x64:$LD_LIBRARY_PATH # For Windows and macOS, export the corresponding lib path instead
+go run .
+```
+
+<br>
+
 ### **C Usage**
 
 #### **Build Scripts**

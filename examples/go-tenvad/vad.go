@@ -1,3 +1,9 @@
+//
+//  Copyright © 2025 Agora
+//  This file is part of TEN Framework, an open source project.
+//  Licensed under the Apache License, Version 2.0, with certain conditions.
+//  Refer to the "LICENSE" file in the root directory for more information.
+//
 package main
 
 /*
@@ -8,15 +14,12 @@ package main
 #cgo darwin LDFLAGS: -F${SRCDIR}/../../lib/macOS -framework ten_vad -Wl,-rpath,${SRCDIR}/../../lib/macOS
 
 // Linux AMD64
-#cgo linux,amd64 LDFLAGS: -L${SRCDIR}/../../lib/Linux/amd64 -lten_vad -Wl,-rpath,'$ORIGIN'/../../lib/Linux/amd64
-
-// Linux ARM64
-#cgo linux,arm64 LDFLAGS: -L${SRCDIR}/../../lib/Linux/arm64 -lten_vad -Wl,-rpath,'$ORIGIN'/../../lib/Linux/arm64
+#cgo linux,amd64 LDFLAGS: -L${SRCDIR}/../../lib/Linux/x64 -lten_vad -Wl,-rpath,'$ORIGIN'/../../lib/Linux/x64
 
 // Windows AMD64
 // For Windows, the .dll needs to be in the PATH or alongside the .exe at runtime.
 // The .lib file is used for linking.
-#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/../../lib/Windows/amd64 -lten_vad
+#cgo windows,amd64 LDFLAGS: -L${SRCDIR}/../../lib/Windows/x64 -lten_vad
 
 #include "ten_vad.h"
 #include <stdlib.h> // Required for C.free if ever used directly for strings (not in this API but good practice)
