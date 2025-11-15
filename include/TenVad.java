@@ -76,11 +76,27 @@ public class TenVad {
         String osName = System.getProperty("os.name").toLowerCase();
         String arch = System.getProperty("os.arch").toLowerCase();
         try {
+            // Get the directory where the class file is located
             String currentDir = Paths.get(TenVad.class.getProtectionDomain()
-                .getCodeSource().getLocation().toURI()).getParent().toString();
-            if (osName.contains("linux")) return Paths.get(currentDir, "lib", "Linux", "x64", "libten_vad.so").toString();
-            if (osName.contains("windows")) return Paths.get(currentDir, "lib", "Windows", (arch.contains("64") ? "x64" : "x86"), "ten_vad.dll").toString();
-            if (osName.contains("mac")) return Paths.get(currentDir, "lib", "macOS", "ten_vad.framework", "ten_vad").toString();
+                .getCodeSource().getLocation().toURI()).toString();
+            
+            // If currentDir points to a .class file or directory, navigate up to project root
+            // Handle both packaged (jar) and unpackaged (file system) cases
+            File baseDir = new File(currentDir);
+            if (baseDir.isFile()) {
+                baseDir = baseDir.getParentFile(); // Go up from jar file
+            }
+            // If we're in a package structure (com/ten/vad), go up to project root
+            while (baseDir != null && !new File(baseDir, "lib").exists()) {
+                baseDir = baseDir.getParentFile();
+            }
+            
+            if (baseDir != null && new File(baseDir, "lib").exists()) {
+                String projectRoot = baseDir.getAbsolutePath();
+                if (osName.contains("linux")) return Paths.get(projectRoot, "lib", "Linux", "x64", "libten_vad.so").toString();
+                if (osName.contains("windows")) return Paths.get(projectRoot, "lib", "Windows", (arch.contains("64") ? "x64" : "x86"), "ten_vad.dll").toString();
+                if (osName.contains("mac")) return Paths.get(projectRoot, "lib", "macOS", "ten_vad.framework", "Versions", "A", "ten_vad").toString();
+            }
         } catch (Exception ignore) {}
         return "ten_vad";
     }

@@ -406,11 +406,15 @@ TEN VAD provides comprehensive Java support with JNI (Java Native Interface) bin
 #### **Compilation**
 
 ```bash
-# Compile Java source
-javac -cp . include/TenVad.java examples/TestTenVad.java
+# Compile Java source, note if JNA library is not installed, you should download it first. For example, you can download JNA library and include it here. You can also export it to the CLASSPATH environment variables
+wget https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar # I just picked a random version
+javac -encoding UTF-8 -cp jna-5.13.0.jar -d . include/TenVad.java examples/TestTenVad.java
 
-# Run example
-java -cp . -Djava.library.path=lib TestTenVad s0724-s0730.wav out.txt
+# Run example in the project root directory
+java -cp .:jna-5.13.0.jar TestTenVad examples/s0724-s0730.wav examples/out.txt
+
+# Run example in the examples directory
+java -cp ..:../jna-5.13.0.jar TestTenVad s0724-s0730.wav out.txt
 ```
 
 #### **Example Code**

@@ -6,7 +6,7 @@
 //
 
 
-// import com.ten.vad.TenVad; // Uncomment when using package structure
+import com.ten.vad.TenVad; // Comment when not using package structure
 import javax.sound.sampled.*;
 import java.io.*;
 import java.nio.ByteBuffer;
