@@ -4,7 +4,8 @@ examples/build-android/
 examples/build-linux/
 examples/build-windows/
 examples/build-web/
-examples_onnx/build-linux
+examples_onnx/cpp/build-linux
+examples_onnx/cpp/build-macos
 include/.DS_Store
 lib/.DS_Store
 examples/.DS_Store
@@ -13,6 +14,6 @@ include/__pycache__/
 __pycache__/
 examples/out.txt
 .DS_Store
-
-
-
+# Python extension module for TEN VAD C++/C and ONNX runtime.
+examples_onnx/python/build-linux
+examples_onnx/python/build-macos
