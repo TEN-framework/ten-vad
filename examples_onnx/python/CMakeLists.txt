@@ -50,9 +50,9 @@ else()
 endif()
 
 # Build Python module
-get_filename_component(TEN_VAD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../.. ABSOLUTE)
+get_filename_component(TEN_VAD_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../.. ABSOLUTE)
 pybind11_add_module(ten_vad_python
-    ../../ten_vad_python.cc
+    ten_vad_python.cc
     ${TEN_VAD_ROOT}/src/ten_vad.cc
     ${TEN_VAD_ROOT}/src/aed.cc
     ${TEN_VAD_ROOT}/src/biquad.cc

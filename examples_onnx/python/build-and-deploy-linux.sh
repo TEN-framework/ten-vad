@@ -66,16 +66,6 @@ fi
 echo "Installing pybind11 and numpy..."
 pip install -q pybind11 numpy
 
-# Setup build directory
-cd build-linux
-cp ../CMakeLists.txt ./CMakeLists.txt
-
-# Create ONNX model symlink in build directory
-if [[ ! -e "onnx_model" ]]; then
-    echo "Creating ONNX model symlink..."
-    ln -sf ../../../src/onnx_model .
-fi
-
 # Build with CMake
 echo "Building with CMake..."
 # Ensure we use the virtual environment's Python for consistency
@@ -84,18 +74,25 @@ echo "Using Python for build: $PYTHON_EXECUTABLE"
 $PYTHON_EXECUTABLE --version
 
 if [[ -n "$ORT_ROOT" ]]; then
-    cmake . -DORT_ROOT="$ORT_ROOT" -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" -DPython_ROOT_DIR="$(dirname $(dirname $PYTHON_EXECUTABLE))"
+    cmake -S . -B build-linux -DORT_ROOT="$ORT_ROOT" -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" -DPython_ROOT_DIR="$(dirname $(dirname $PYTHON_EXECUTABLE))"
 else
-    cmake . -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" -DPython_ROOT_DIR="$(dirname $(dirname $PYTHON_EXECUTABLE))"
+    cmake -S . -B build-linux -DPython_EXECUTABLE="$PYTHON_EXECUTABLE" -DPython_ROOT_DIR="$(dirname $(dirname $PYTHON_EXECUTABLE))"
 fi
-make -j$(nproc)
+cmake --build build-linux -j$(nproc)
 
 # Move module to lib directory within build-linux
+cd build-linux
 mkdir -p lib
 mv ten_vad_python*.so lib/
 
+# Create ONNX model symlink in build directory
+if [[ ! -e "onnx_model" ]]; then
+    echo "Creating ONNX model symlink..."
+    ln -sf ../../../src/onnx_model .
+fi
+
 # Copy demo script to build-linux for easy testing
-cp ../../ten_vad_demo.py .
+cp ../ten_vad_demo.py .
 
 python3 ./ten_vad_demo.py ../../../examples/s0724-s0730.wav out-python.txt
 

@@ -66,10 +66,11 @@ cmake ../ -DORT_ROOT="$ORT_ROOT" -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 
 # Step 2: Run the demo
-ln -sf ../../../src/onnx_model/
-./ten_vad_demo ../../../examples/s0724-s0730.wav out.txt
+ln -sf ../../src/onnx_model/
+./ten_vad_demo ../../examples/s0724-s0730.wav out.txt
 
 cd ../
 
 echo "Build complete."
-echo "Executable at: cpp/build-macos/ten_vad_demo"
+echo "Executable at: build-macos/ten_vad_demo"
+

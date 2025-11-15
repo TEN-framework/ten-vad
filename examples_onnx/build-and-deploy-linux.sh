@@ -30,7 +30,8 @@ cmake ../ -DORT_ROOT="$ORT_ROOT"
 cmake --build . --config Release
 
 # Step 2: Run the demo
-ln -s ../../../src/onnx_model/
-./ten_vad_demo ../../../examples/s0724-s0730.wav out.txt
+ln -s ../../src/onnx_model/
+./ten_vad_demo ../../examples/s0724-s0730.wav out.txt
 
-cd ../../
+cd ../
+

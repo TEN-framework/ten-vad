@@ -76,11 +76,10 @@ Now that dependencies are installed, choose your platform and build type.
 Build a standalone C++ executable that uses ONNX Runtime directly.
 
 ```bash
-cd cpp
 ./build-and-deploy-linux.sh --ort-path ~/onnxruntime-linux-$ARCH-$ONNX_VER
 ```
 
-**Output**: `cpp/build-linux/ten_vad_demo`
+**Output**: `build-linux/ten_vad_demo`
 
 #### Python Extension Module
 Build a Python extension module with pybind11 bindings.
@@ -99,11 +98,10 @@ cd python
 #### C++ Demo
 Build a standalone C++ executable that uses ONNX Runtime directly.
 ```bash
-cd cpp
 ./build-and-deploy-macos.sh --ort-path ~/onnxruntime-osx-$ARCH-$ONNX_VER
 ```
 
-**Output**: `cpp/build-macos/ten_vad_demo`
+**Output**: `build-macos/ten_vad_demo`
 
 #### Python Extension Module
 
@@ -124,12 +122,12 @@ From the build directory, run the demo executable:
 
 ```bash
 # Linux
-cd cpp/build-linux
-./ten_vad_demo ../../../examples/s0724-s0730.wav out-cpp.txt
+cd build-linux
+./ten_vad_demo ../../examples/s0724-s0730.wav out-cpp.txt
 
 # macOS
-cd cpp/build-macos
-./ten_vad_demo ../../../examples/s0724-s0730.wav out-cpp.txt
+cd build-macos
+./ten_vad_demo ../../examples/s0724-s0730.wav out-cpp.txt
 ```
 
 ### Python Extension Module
@@ -197,7 +195,7 @@ import numpy as np
 
 # Add the built module to path
 sys.path.insert(0, "python/build-macos/lib")  # macOS
-# sys.path.insert(0, "python/build-linux-python/lib")  # Linux
+# sys.path.insert(0, "python/build-linux/lib")  # Linux
 
 import ten_vad_python
 
@@ -217,17 +215,15 @@ print(f"Is voice: {is_voice}")
 ```
 examples_onnx/
 ├── README.md                          # This file
-├── CMakeLists.txt                     # Root build configuration
-├── cpp/                               # C++ demo (Linux + macOS)
-│   ├── CMakeLists.txt
-│   ├── build-and-deploy-linux.sh
-│   └── build-and-deploy-macos.sh
-├── python/                            # Python extension (Linux + macOS)
-│   ├── CMakeLists.txt
-│   ├── build-and-deploy-linux-python.sh
-│   └── build-and-deploy-macos.sh
-├── ten_vad_demo.py                    # Python demo script
-└── ten_vad_python.cc                  # pybind11 wrapper
+├── CMakeLists.txt                     # C++ demo build configuration
+├── build-and-deploy-linux.sh          # C++ demo Linux build script
+├── build-and-deploy-macos.sh          # C++ demo macOS build script
+└── python/                            # Python extension (Linux + macOS)
+    ├── CMakeLists.txt                 # Python extension build configuration
+    ├── build-and-deploy-linux.sh      # Python build script for Linux
+    ├── build-and-deploy-macos.sh      # Python build script for macOS
+    ├── ten_vad_demo.py                # Python demo script
+    └── ten_vad_python.cc              # pybind11 wrapper
 ```
 
 ## Build notes
@@ -254,6 +250,6 @@ architecture.
 
 - [Main TEN VAD Repository](../../README.md)
 - [ONNX Runtime Releases](https://github.com/microsoft/onnxruntime/releases)
-- [TEN VAD Python Examples](ten_vad_demo.py)
+- [TEN VAD Python Examples](python/ten_vad_demo.py)
 
 ---
