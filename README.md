@@ -496,6 +496,9 @@ public static class VadResult {
 
 
 ### **Go (Golang) Usage**
+
+TEN VAD provides Golang support for Linux, macOS and Windows.
+
 #### **Usage with compilation**
 ```
 cd examples/go-tenvad
