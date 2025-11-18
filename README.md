@@ -46,10 +46,11 @@
 - [Installation](#installation)
 - [Quick Start](#quick-start)
   - [Python Usage](#python-usage)
-    - [Linux](#1-linux--macos--windows)
+    - [Linux / macOS / Windows](#1-linux--macos--windows)
   - [JS Usage](#js-usage)
     - [Web](#1-web)
   - [Java Usage](#java-usage)
+  - [Go (Golang) Usage](#go-golang-usage)
   - [C Usage](#c-usage)
     - [Linux](#1-linux)
     - [Windows](#2-windows)
@@ -336,7 +337,7 @@ sudo apt install libc++1
 
 <br>
 
-#### **Usage**
+#### **Usage (Prebuilt-libs)**
 
 Note: For usage in python, you can either use it by **git clone** or **pip**.
 
@@ -375,6 +376,22 @@ pip install -U --force-reinstall -v git+https://github.com/TEN-framework/ten-vad
 ```
 from ten_vad import TenVad
 ```
+
+#### **Usage (ONNX model)**
+You have to download the **onnxruntime** packages from the [microsoft official onnxruntime github website](https://github.com/microsoft/onnxruntime). Note that the version of onnxruntime must be higher than or equal to 1.17.1 (e.g. onnxruntime-linux-x64-1.17.1.tgz).
+<br>
+<br>
+You can check the official **ONNX Runtime releases** from [this website](https://github.com/microsoft/onnxruntime/tags). And for example, to download version 1.17.1 (Linux x64), use [this link](https://github.com/microsoft/onnxruntime/releases/download/v1.17.1/onnxruntime-linux-x64-1.17.1.tgz). After extracting the compressed file, you'll find two important directories:`include/` - header files, `lib/` - library files
+
+```
+1) cd examples_onnx/python
+2) ./build-and-deploy-linux.sh --ort-path /absolute/path/to/your/onnxruntime/root/dir # For Linux. If macOS, run build-and-deploy-macos.sh instead.
+```
+
+**Note 1**: If executing the onnx demo from a different directory than the one used when running build-and-deploy-linux.sh, ensure to create a symbolic link to src/onnx_model/ to prevent ONNX model file loading failures.
+<br>
+**Note 2**: The **ONNX model** locates in `src/onnx_model` directory.
+
 
 <br>
 
