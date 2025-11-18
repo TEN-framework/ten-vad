@@ -377,6 +377,8 @@ pip install -U --force-reinstall -v git+https://github.com/TEN-framework/ten-vad
 from ten_vad import TenVad
 ```
 
+<br>
+
 #### **Usage (ONNX model)**
 You have to download the **onnxruntime** packages from the [microsoft official onnxruntime github website](https://github.com/microsoft/onnxruntime). Note that the version of onnxruntime must be higher than or equal to 1.17.1 (e.g. onnxruntime-linux-x64-1.17.1.tgz).
 <br>
