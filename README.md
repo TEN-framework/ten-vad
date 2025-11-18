@@ -393,7 +393,7 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 **Note 1**: If executing the onnx demo from a different directory than the one used when running build-and-deploy-linux.sh, ensure to create a symbolic link to src/onnx_model/ to prevent ONNX model file loading failures.
 <br>
 **Note 2**: The **ONNX model** locates in `src/onnx_model` directory.
-
+**Note 3**: For **macOS**, run **build-and-deploy-macos.sh** instead.
 
 <br>
 
