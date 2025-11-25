@@ -1,0 +1,424 @@
+<!--
+Copyright © 2025 Agora
+This file is part of TEN Framework, an open source project.
+Licensed under the Apache License, Version 2.0, with certain conditions.
+Refer to the "LICENSE" file in the root directory for more information.
+-->
+
+<!--
+TEN VAD WebAssembly browser Test
+Simplified and clean version based on main.c
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEN VAD Browser Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        h1 {
+            color: #4ec9b0;
+            border-bottom: 2px solid #4ec9b0;
+            padding-bottom: 10px;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        button:disabled {
+            background: #3c3c3c;
+            cursor: not-allowed;
+        }
+        #output {
+            background: #252526;
+            border: 1px solid #3c3c3c;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 800px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .status {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+        .error {
+            color: #f48771;
+        }
+        .success {
+            color: #b5cea8;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎙️ TEN VAD WebAssembly Test</h1>
+    
+    <div>
+        <button id="btnTest" disabled>Run Array Test (Generated)</button>
+        <button id="btnTestReal" disabled>Run Array Test (Real Data)</button>
+        <button id="btnBenchmark" disabled>Run Benchmark</button>
+        <button id="btnClear">Clear Output</button>
+    </div>
+
+    <div id="output">Initializing...</div>
+
+    <script src="sample_array.js"></script>
+    <script type="module">
+        // Configuration
+        const HOP_SIZE = 256;
+        const VOICE_THRESHOLD = 0.5;
+
+        // Global state
+        let vadModule = null;
+        let vadHandle = null;
+        let vadHandlePtr = null;
+
+        // ========================================================================
+        // UTILITY FUNCTIONS
+        // ========================================================================
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            let colorClass = '';
+            
+            if (type === 'error') colorClass = 'error';
+            if (type === 'success') colorClass = 'success';
+            if (type === 'status') colorClass = 'status';
+            
+            const line = `[${timestamp}] ${message}`;
+            output.innerHTML += `<span class="${colorClass}">${line}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function addHelperFunctions() {
+            if (!vadModule.getValue) {
+                vadModule.getValue = function(ptr, type) {
+                    const buffer = vadModule.HEAPU8.buffer;
+                    const view = new DataView(buffer);
+                    
+                    switch (type) {
+                        case 'i32': return view.getInt32(ptr, true);
+                        case 'float': return view.getFloat32(ptr, true);
+                        default: throw new Error(`Unsupported type: ${type}`);
+                    }
+                };
+            }
+            
+            if (!vadModule.UTF8ToString) {
+                vadModule.UTF8ToString = function(ptr) {
+                    if (!ptr) return '';
+                    const HEAPU8 = vadModule.HEAPU8;
+                    let endPtr = ptr;
+                    while (HEAPU8[endPtr]) ++endPtr;
+                    const bytes = HEAPU8.subarray(ptr, endPtr);
+                    return new TextDecoder('utf-8').decode(bytes);
+                };
+            }
+        }
+
+        // ========================================================================
+        // AUDIO GENERATION
+        // ========================================================================
+
+        function generateTestAudio(durationMs = 5000) {
+            const sampleRate = 16000;
+            const totalSamples = Math.floor(durationMs * sampleRate / 1000);
+            const audioData = new Int16Array(totalSamples);
+            
+            log(`Generating ${totalSamples} samples for ${durationMs}ms audio...`);
+            
+            for (let i = 0; i < totalSamples; i++) {
+                const t = i / sampleRate;
+                let sample = 0;
+                
+                if (t < 2.0) {
+                    // Voice frequencies (440Hz + 880Hz)
+                    sample = Math.sin(2 * Math.PI * 440 * t) * 8000 +
+                            Math.sin(2 * Math.PI * 880 * t) * 4000;
+                } else if (t < 3.0) {
+                    // Noise
+                    sample = (Math.random() - 0.5) * 3000;
+                } else if (t < 4.0) {
+                    // Mixed voice (220Hz + 660Hz)
+                    sample = Math.sin(2 * Math.PI * 220 * t) * 6000 + 
+                            Math.sin(2 * Math.PI * 660 * t) * 3000;
+                } else {
+                    // Silence with minimal noise
+                    sample = Math.random() * 50;
+                }
+                
+                audioData[i] = Math.max(-32768, Math.min(32767, Math.floor(sample)));
+            }
+            
+            return audioData;
+        }
+
+        // ========================================================================
+        // VAD OPERATIONS
+        // ========================================================================
+
+        function getVADVersion() {
+            if (!vadModule) return "unknown";
+            try {
+                const versionPtr = vadModule._ten_vad_get_version();
+                return vadModule.UTF8ToString(versionPtr);
+            } catch (error) {
+                return "unknown";
+            }
+        }
+
+        function createVADInstance() {
+            try {
+                vadHandlePtr = vadModule._malloc(4);
+                const result = vadModule._ten_vad_create(vadHandlePtr, HOP_SIZE, VOICE_THRESHOLD);
+                
+                if (result === 0) {
+                    vadHandle = vadModule.getValue(vadHandlePtr, 'i32');
+                    return true;
+                } else {
+                    log(`VAD creation failed with code: ${result}`, 'error');
+                    vadModule._free(vadHandlePtr);
+                    return false;
+                }
+            } catch (error) {
+                log(`Error creating VAD instance: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        function destroyVADInstance() {
+            if (vadHandlePtr && vadModule) {
+                vadModule._ten_vad_destroy(vadHandlePtr);
+                vadModule._free(vadHandlePtr);
+                vadHandlePtr = null;
+                vadHandle = null;
+            }
+        }
+
+        function processAudio(inputBuf, frameNum, outProbs, outFlags) {            
+            if (!createVADInstance()) {
+                return -1;
+            }
+            
+            const startTime = performance.now();
+            
+            for (let i = 0; i < frameNum; i++) {
+                const frameStart = i * HOP_SIZE;
+                const frameData = inputBuf.slice(frameStart, frameStart + HOP_SIZE);
+                
+                const audioPtr = vadModule._malloc(HOP_SIZE * 2);
+                const probPtr = vadModule._malloc(4);
+                const flagPtr = vadModule._malloc(4);
+                
+                try {
+                    // Copy Int16 data to WASM memory
+                    vadModule.HEAP16.set(frameData, audioPtr / 2);
+                    
+                    const result = vadModule._ten_vad_process(
+                        vadHandle, audioPtr, HOP_SIZE, probPtr, flagPtr
+                    );
+                    
+                    if (result === 0) {
+                        const probability = vadModule.getValue(probPtr, 'float');
+                        const flag = vadModule.getValue(flagPtr, 'i32');
+                        
+                        outProbs[i] = probability;
+                        outFlags[i] = flag;
+                        
+                        // Log all frames
+                        log(`[${i}] ${probability.toFixed(6)}, ${flag}`)
+                    } else {
+                        log(`Frame ${i} processing failed with code: ${result}`, 'error');
+                        outProbs[i] = 0.0;
+                        outFlags[i] = 0;
+                    }
+                } finally {
+                    vadModule._free(audioPtr);
+                    vadModule._free(probPtr);
+                    vadModule._free(flagPtr);
+                }
+            }
+            
+            const endTime = performance.now();
+            const processingTime = endTime - startTime;
+            
+            destroyVADInstance();
+            return processingTime;
+        }
+
+        // ========================================================================
+        // TEST FUNCTIONS
+        // ========================================================================
+
+        function printResults(processingTime, totalAudioTime, outFlags, frameNum) {
+            const rtf = processingTime / totalAudioTime;
+            const voiceFrames = outFlags.filter(flag => flag === 1).length;
+            const voicePercentage = (voiceFrames / frameNum * 100).toFixed(1);
+            
+            log('\n=== Processing Results ===', 'status');
+            log(`Time: ${processingTime.toFixed(0)}ms, Audio: ${totalAudioTime.toFixed(2)}ms, RTF: ${rtf.toFixed(6)}`, 'success');
+            log(`Voice frames: ${voiceFrames}/${frameNum} (${voicePercentage}%)`, 'success');
+        }
+
+        async function testWithArray(useRealData = false) {
+            try {
+                log('\n=== Array Test ===\n', 'status');
+                
+                let inputBuf;
+                if (useRealData && typeof REAL_AUDIO_DATA !== 'undefined') {
+                    inputBuf = REAL_AUDIO_DATA;
+                    log('Using real audio data from sample_array.js');
+                } else {
+                    inputBuf = generateTestAudio(5000);
+                }
+                
+                const byteNum = inputBuf.byteLength;
+                const sampleNum = byteNum / 2;
+                const totalAudioTime = sampleNum / 16.0;
+                const frameNum = Math.floor(sampleNum / HOP_SIZE);
+                
+                log(`Audio info: ${byteNum} bytes, ${frameNum} frames, ${totalAudioTime.toFixed(2)}ms`);
+                
+                const outProbs = new Float32Array(frameNum);
+                const outFlags = new Int32Array(frameNum);
+                
+                const processingTime = processAudio(inputBuf, frameNum, outProbs, outFlags);
+                
+                if (processingTime > 0) {
+                    printResults(processingTime, totalAudioTime, outFlags, frameNum);
+                }
+                
+            } catch (error) {
+                log(`Test error: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        async function runBenchmark() {
+            try {
+                log('\n=== Performance Benchmark ===\n', 'status');
+                
+                if (!createVADInstance()) return;
+                
+                const testData = new Int16Array(HOP_SIZE);
+                for (let i = 0; i < HOP_SIZE; i++) {
+                    testData[i] = Math.sin(2 * Math.PI * 440 * i / 16000) * 8000;
+                }
+                
+                const testCases = [100, 1000, 10000];
+                
+                for (const numFrames of testCases) {
+                    const audioPtr = vadModule._malloc(HOP_SIZE * 2);
+                    const probPtr = vadModule._malloc(4);
+                    const flagPtr = vadModule._malloc(4);
+                    
+                    vadModule.HEAP16.set(testData, audioPtr / 2);
+                    
+                    const startTime = performance.now();
+                    
+                    for (let i = 0; i < numFrames; i++) {
+                        vadModule._ten_vad_process(vadHandle, audioPtr, HOP_SIZE, probPtr, flagPtr);
+                    }
+                    
+                    const endTime = performance.now();
+                    const totalTime = endTime - startTime;
+                    const avgTime = totalTime / numFrames;
+                    
+                    // Calculate RTF (Real-time Factor)
+                    const frameAudioTime = (HOP_SIZE / 16000) * 1000; // 16ms
+                    const totalAudioTime = numFrames * frameAudioTime;
+                    const rtf = totalTime / totalAudioTime;
+                    
+                    log(`${numFrames} frames: ${totalTime.toFixed(0)}ms total, ${avgTime.toFixed(3)}ms/frame, RTF: ${rtf.toFixed(3)}`, 'success');
+                    
+                    vadModule._free(audioPtr);
+                    vadModule._free(probPtr);
+                    vadModule._free(flagPtr);
+                }
+                
+                destroyVADInstance();
+                
+            } catch (error) {
+                log(`Benchmark error: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // ========================================================================
+        // INITIALIZATION
+        // ========================================================================
+
+        async function init() {
+            try {
+                log('Loading WebAssembly module...', 'status');
+                
+                const module = await import('./../lib/Web/ten_vad.js');
+                vadModule = await module.default();
+                
+                addHelperFunctions();
+                
+                const version = getVADVersion();
+                log(`Module loaded successfully. Version: ${version}\n`, 'success');
+                
+                // Enable buttons
+                document.getElementById('btnTest').disabled = false;
+                document.getElementById('btnTestReal').disabled = false;
+                document.getElementById('btnBenchmark').disabled = false;
+                
+                // Check if real data is available
+                if (typeof REAL_AUDIO_DATA === 'undefined') {
+                    document.getElementById('btnTestReal').disabled = true;
+                    document.getElementById('btnTestReal').title = 'Real data not loaded';
+                }
+                
+            } catch (error) {
+                log(`Failed to load module: ${error.message}`, 'error');
+                console.error(error);
+            }
+        }
+
+        // ========================================================================
+        // EVENT HANDLERS
+        // ========================================================================
+
+        document.getElementById('btnTest').addEventListener('click', () => testWithArray(false));
+        document.getElementById('btnTestReal').addEventListener('click', () => testWithArray(true));
+        document.getElementById('btnBenchmark').addEventListener('click', runBenchmark);
+        document.getElementById('btnClear').addEventListener('click', () => {
+            document.getElementById('output').innerHTML = '';
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (vadHandlePtr) {
+                destroyVADInstance();
+            }
+        });
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
+

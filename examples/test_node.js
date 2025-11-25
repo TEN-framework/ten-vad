@@ -24,6 +24,9 @@ const WASM_DIR = './../lib/Web';
 const WASM_JS_FILE = path.join(WASM_DIR, 'ten_vad.js');
 const WASM_BINARY_FILE = path.join(WASM_DIR, 'ten_vad.wasm');
 
+// Real audio data (loaded from sample_array.js if available)
+let REAL_AUDIO_DATA = null;
+
 // Global state
 let vadModule = null;
 let vadHandle = null;
@@ -65,7 +68,36 @@ function addHelperFunctions() {
 // AUDIO GENERATION
 // ============================================================================
 
-function generateTestAudio(durationMs = 5000) {
+function loadRealAudioData() {
+    try {
+        // Try to load real audio data from sample_array.js
+        const sampleDataPath = path.join(__dirname, 'sample_array.js');
+        if (fs.existsSync(sampleDataPath)) {
+            const sampleDataContent = fs.readFileSync(sampleDataPath, 'utf8');
+            // Extract the array data using eval (safe here as it's our own file)
+            const match = sampleDataContent.match(/new Int16Array\(\[([\s\S]*?)\]\)/);
+            if (match) {
+                const arrayContent = match[1];
+                const values = arrayContent.split(',').map(v => parseInt(v.trim()));
+                REAL_AUDIO_DATA = new Int16Array(values);
+                console.log(`Loaded real audio data: ${REAL_AUDIO_DATA.length} samples (${(REAL_AUDIO_DATA.length/16000).toFixed(2)}s)`);
+                return true;
+            }
+        }
+    } catch (error) {
+        console.warn(`Could not load real audio data: ${error.message}`);
+    }
+    return false;
+}
+
+function generateTestAudio(durationMs = 5000, useRealData = true) {
+    // Try to use real data first if requested
+    if (useRealData && REAL_AUDIO_DATA) {
+        console.log(`Using real audio data: ${REAL_AUDIO_DATA.length} samples, ${(REAL_AUDIO_DATA.length/16000*1000).toFixed(2)}ms`);
+        return REAL_AUDIO_DATA;
+    }
+    
+    // Fall back to generated data
     const sampleRate = 16000;
     const totalSamples = Math.floor(durationMs * sampleRate / 1000);
     const audioData = new Int16Array(totalSamples);
@@ -223,10 +255,10 @@ function saveResults(outProbs, outFlags, frameNum, filename = 'out.txt') {
 // TEST FUNCTIONS
 // ============================================================================
 
-async function testWithArray() {
+async function testWithArray(useRealData = true) {
     console.log("=== Array Test ===\n");
     
-    const inputBuf = generateTestAudio(5000);
+    const inputBuf = generateTestAudio(5000, useRealData);
     const byteNum = inputBuf.byteLength;
     const sampleNum = byteNum / 2;
     const totalAudioTime = sampleNum / 16.0;
@@ -490,6 +522,9 @@ async function loadModule() {
 async function main() {
     const args = process.argv.slice(2);
     
+    // Load real audio data if available
+    loadRealAudioData();
+    
     // Initialize module
     if (!await loadModule()) {
         process.exit(1);
@@ -502,7 +537,7 @@ async function main() {
             console.log(`Input: ${inputFile}, Output: ${outputFile}\n`);
             await testWithWAV(inputFile, outputFile);
         } else {
-            // Test with generated array
+            // Test with array (uses real data if available)
             await testWithArray();
         }
         await runBenchmark();
