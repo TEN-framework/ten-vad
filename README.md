@@ -21,6 +21,7 @@
 <br>
 
 ## Latest News 🔥
+- [2025/11] **WASM** build guide and browser test demo are now available in `lib/Web` and `examples`.
 - [2025/11] We supported **Python** inference with **ONNX model** on **Linux**, **macOS** thanks to [Guy Nicholson](https://github.com/guynich)!
 - [2025/11] We supported **Golang** on **Linux**, **macOS** and **Windows** with usage of the prebuilt-libs thanks to [hylarucoder](https://github.com/hylarucoder)!
 - [2025/11] We supported **Java** on **Linux**, **macOS**, **Windows**, **Android** with usage of the prebuilt-libs thanks to [ZhangYang(arthasking123)](https://github.com/arthasking123)!
@@ -32,34 +33,64 @@
 <br>
 
 ## Table of Contents
+- [Latest News 🔥](#latest-news-)
+- [Table of Contents](#table-of-contents)
 - [Welcome to TEN](#welcome-to-ten)
 - [TEN Hugging Face Space](#ten-hugging-face-space)
-- [Introduction](#introduction)
-- [Key Features](#key-features)
-  - [High-Performance](#1-high-performance)
-    - [Performance Comparison](#11-performance-comparison)
-  - [Agent-Friendly](#2-agent-friendly)
-  - [Lightweight](#3-lightweight)
-  - [Multiple Programming Languages and Platforms](#4-multiple-programming-languages-and-platforms)
-  - [Supported Sampling Rate and Hop Size](#5-supported-sampling-rate-and-hop-size)
-- [Developers Testimonial](#developers-testimonial)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-  - [Python Usage](#python-usage)
-    - [Linux / macOS / Windows](#1-linux--macos--windows)
-  - [JS Usage](#js-usage)
-    - [Web](#1-web)
-  - [Java Usage](#java-usage)
-  - [Go (Golang) Usage](#go-golang-usage)
-  - [C Usage](#c-usage)
-    - [Linux](#1-linux)
-    - [Windows](#2-windows)
-    - [macOS](#3-macos)
-    - [Android](#4-android)
-    - [iOS](#5-ios)
+- [**Introduction**](#introduction)
+- [**Key Features**](#key-features)
+  - [**1. High-Performance:**](#1-high-performance)
+  - [**1.1 Performance Comparison**](#11-performance-comparison)
+  - [**2. Agent-Friendly:**](#2-agent-friendly)
+  - [**3. Lightweight:**](#3-lightweight)
+  - [**4. Multiple Programming Languages and Platforms:**](#4-multiple-programming-languages-and-platforms)
+  - [**5. Supported Sampling Rate and Hop Size:**](#5-supported-sampling-rate-and-hop-size)
+- [**Developers Testimonial**](#developers-testimonial)
+- [**Installation**](#installation)
+- [**Quick Start**](#quick-start)
+  - [**Python Usage**](#python-usage)
+    - [**1. Linux / macOS / Windows**](#1-linux--macos--windows)
+    - [**Requirements**](#requirements)
+    - [**Usage (Prebuilt-libs)**](#usage-prebuilt-libs)
+      - [**By using git clone:**](#by-using-git-clone)
+      - [**By using pip:**](#by-using-pip)
+    - [**Usage (ONNX model)**](#usage-onnx-model)
+  - [**JS Usage**](#js-usage)
+      - [**Requirements**](#requirements-1)
+      - [**Usage**](#usage)
+  - [**Java Usage**](#java-usage)
+    - [**Requirements**](#requirements-2)
+    - [**Compilation**](#compilation)
+    - [**Example Code**](#example-code)
+    - [**Platform-Specific Notes**](#platform-specific-notes)
+    - [**API Reference**](#api-reference)
+  - [**Go (Golang) Usage**](#go-golang-usage)
+    - [**Usage with compilation**](#usage-with-compilation)
+    - [**Usage without compilation**](#usage-without-compilation)
+  - [**C Usage**](#c-usage)
+    - [**Build Scripts**](#build-scripts)
+    - [**Dynamic Library Configuration**](#dynamic-library-configuration)
+    - [**Customization**](#customization)
+    - [**Overview of Usage**](#overview-of-usage)
+    - [**1. Linux**](#1-linux)
+      - [**Requirements**](#requirements-3)
+      - [**Usage (prebuilt-lib)**](#usage-prebuilt-lib)
+      - [**Usage (ONNX)**](#usage-onnx)
+    - [**2. Windows**](#2-windows)
+      - [**Requirements**](#requirements-4)
+      - [**Usage**](#usage-1)
+    - [**3. macOS**](#3-macos)
+      - [**Requirements**](#requirements-5)
+      - [**Usage**](#usage-2)
+    - [**4. Android**](#4-android)
+      - [**Requirements**](#requirements-6)
+      - [**Usage**](#usage-3)
+    - [**5. iOS**](#5-ios)
+      - [**Requirements**](#requirements-7)
+      - [**Usage**](#usage-4)
 - [TEN Ecosystem](#ten-ecosystem)
 - [Ask Questions](#ask-questions)
-- [Citations](#citations)
+- [**Citations**](#citations)
 - [License](#license)
 
 <br>
@@ -400,18 +431,22 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 
 ### **JS Usage**
 
-#### **1. Web**
-
 ##### **Requirements**
 
 - Node.js (macOS v14.18.2, Linux v16.20.2 verified)
 - Terminal
+- Browser
 
 ##### **Usage**
 
 ```
+Terminal
 1) cd ./examples
 2) node test_node.js s0724-s0730.wav out.txt
+
+Browser
+1) python3 -m http.server 8000
+2) Open browser and navigate to http://localhost:8000/examples/test_browser.html
 ```
 
 <br>
