@@ -21,6 +21,7 @@
 <br>
 
 ## Latest News 🔥
+- [2025/11] **WASM** build guide and browser test demo are now available in `lib/Web` and `examples`.
 - [2025/11] We supported **Python** inference with **ONNX model** on **Linux**, **macOS** thanks to [Guy Nicholson](https://github.com/guynich)!
 - [2025/11] We supported **Golang** on **Linux**, **macOS** and **Windows** with usage of the prebuilt-libs thanks to [hylarucoder](https://github.com/hylarucoder)!
 - [2025/11] We supported **Java** on **Linux**, **macOS**, **Windows**, **Android** with usage of the prebuilt-libs thanks to [ZhangYang(arthasking123)](https://github.com/arthasking123)!
@@ -48,7 +49,6 @@
   - [Python Usage](#python-usage)
     - [Linux / macOS / Windows](#1-linux--macos--windows)
   - [JS Usage](#js-usage)
-    - [Web](#1-web)
   - [Java Usage](#java-usage)
   - [Go (Golang) Usage](#go-golang-usage)
   - [C Usage](#c-usage)
@@ -400,18 +400,22 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 
 ### **JS Usage**
 
-#### **1. Web**
-
 ##### **Requirements**
 
 - Node.js (macOS v14.18.2, Linux v16.20.2 verified)
 - Terminal
+- Browser
 
 ##### **Usage**
 
 ```
+Terminal
 1) cd ./examples
 2) node test_node.js s0724-s0730.wav out.txt
+
+Browser
+1) python3 -m http.server 8000
+2) Open browser and navigate to http://localhost:8000/examples/test_browser.html
 ```
 
 <br>
