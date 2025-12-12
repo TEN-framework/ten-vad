@@ -9,6 +9,11 @@ get_filename_component(ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../ ABSOLUTE)
 
 project(ten_vad_demo)
 
+# 16KB page alignment for Android compatibility
+if(ANDROID)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,max-page-size=16384")
+endif()
 add_executable(ten_vad_demo ${ROOT}/examples/main.c)
 target_include_directories(ten_vad_demo PRIVATE "${ROOT}/include")
 
