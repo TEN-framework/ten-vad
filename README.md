@@ -10,7 +10,6 @@
 ![](https://img.shields.io/github/contributors/ten-framework/ten-vad?color=c4f042&labelColor=gray&style=flat-square)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome!-brightgreen.svg?style=flat-square)](https://github.com/TEN-framework/ten-vad/pulls)
 [![HuggingFace TEN VAD](https://img.shields.io/badge/Hugging%20Face-TEN%20VAD-yellow?style=flat&logo=huggingface)](https://huggingface.co/TEN-framework/ten-vad)
-[![GitHub license](https://img.shields.io/badge/License-Apache_2.0_with_certain_conditions-blue.svg?labelColor=%20%23155EEF&color=%20%23528bff)](https://github.com/TEN-framework/ten-vad/blob/main/LICENSE)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TEN-framework/TEN-vad)
 <!-- [![ReadmeX](https://raw.githubusercontent.com/CodePhiliaX/resource-trusteeship/main/readmex.svg)](https://readmex.com/TEN-framework/ten-vad) -->
 
