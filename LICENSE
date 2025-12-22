@@ -1,6 +1,7 @@
 Open Source License
 
-The ten-vad is licensed pursuant to the Apache License v2.0, with the
+The ten-vad is licensed pursuant to the Apache License v2.0(provided
+for your convenience below), with the
 following additional conditions. You may reproduce, prepare Derivative Works
 of, publicly display, publicly perform, sublicense, distribute, or otherwise
 make available (together, "Deploy") the ten-vad, for commercial or
@@ -25,6 +26,11 @@ non-commercial purposes, provided that you agree to abide by the terms below:
 
     5. "Application(s)" shall mean your software programs designed or developed
        by using the ten-vad or where deployment is enabled by the ten-vad.
+    
+    6. Note that the project contains derived code from other open source project
+       with BSD-3-Clause and BSD-2-Clause license, refer to the "NOTICES" 
+       file in the root directory for detailed information.
+
 
   Copyright © 2025 Agora
 
@@ -39,9 +45,3 @@ non-commercial purposes, provided that you agree to abide by the terms below:
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-
-=======================================================================================
-
-  Note that the project contains derived code from other open source project
-  with BSD-3-Clause and BSD-2-Clause license, refer to the "NOTICES" 
-  file in the root directory for detailed information.

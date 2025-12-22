@@ -757,7 +757,7 @@ TEN VAD is available on these AI-powered Q&A platforms. They can help you find a
 
 ## License
 
-This project is licensed under Apache 2.0 with certain conditions. Refer to the "LICENSE" file in the root directory for detailed information. Note that `pitch_est.cc` contains modified code derived from [LPCNet](https://github.com/xiph/LPCNet), which is [BSD-2-Clause](https://spdx.org/licenses/BSD-2-Clause.html) and [BSD-3-Clause](https://spdx.org/licenses/BSD-3-Clause.html) licensed, refer to the NOTICES file in the root directory for detailed information.
+This project is licensed pursuant to the Apache 2.0 with additional conditions. Refer to the "LICENSE" file in the root directory for detailed information. Note that `pitch_est.cc` contains modified code derived from [LPCNet](https://github.com/xiph/LPCNet), which is [BSD-2-Clause](https://spdx.org/licenses/BSD-2-Clause.html) and [BSD-3-Clause](https://spdx.org/licenses/BSD-3-Clause.html) licensed, refer to the NOTICES file in the root directory for detailed information.
 
 <br>
 
