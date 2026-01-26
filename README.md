@@ -1,6 +1,6 @@
 <div align="center">
 
-![Image](https://github.com/user-attachments/assets/e504135e-67fd-4fa1-b0e4-d495358d8aa5)
+![Image](https://github.com/user-attachments/assets/e7280a68-210b-44da-ad27-a4dbc1be6e4d)
 
 [![TEN Releases]( https://img.shields.io/github/v/release/ten-framework/ten-vad?color=369eff&labelColor=gray&logo=github&style=flat-square )](https://github.com/TEN-framework/ten-vad/releases)
 [![Release Date](https://img.shields.io/github/release-date/ten-framework/ten-vad?labelColor=gray&style=flat-square)](https://github.com/TEN-framework/ten-vad/releases)
