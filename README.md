@@ -56,6 +56,7 @@
     - [macOS](#3-macos)
     - [Android](#4-android)
     - [iOS](#5-ios)
+- [Community Projects](#community-projects)
 - [TEN Ecosystem](#ten-ecosystem)
 - [Ask Questions](#ask-questions)
 - [Citations](#citations)
@@ -712,6 +713,18 @@ cd ./examples
       - Specify your Certification
 
         3.5. Build in Xcode and run demo on your device.
+
+<br>
+
+## Community Projects
+
+Third-party integrations and implementations built by the community.
+
+| Project | Language | Description |
+| ------- | -------- | ----------- |
+| [**wavekat&#8209;vad**](https://github.com/wavekat/wavekat-vad) | Rust | Multi-backend VAD crate on [crates.io](https://crates.io/crates/wavekat-vad) with TEN VAD support via pure Rust ONNX inference. |
+
+> Have a project using TEN VAD? Feel free to open a PR to add it here!
 
 <br>
 
