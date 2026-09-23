@@ -33,6 +33,7 @@ setup(
     version="1.0.6.8",
     description="Voice Activity Detector (VAD) : low-latency, high-performance and lightweight",
     packages=["ten_vad"],
+    install_requires=["numpy"],
     package_data={
         "ten_vad": [
             "lib/Linux/x64/*.so",
