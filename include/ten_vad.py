@@ -119,8 +119,8 @@ class TenVad:
         assert (
             type(audio_data[0]) == np.int16
         ), "[TEN VAD]: audio data type error, must be int16"
-        data_pointer = audio_data.__array_interface__["data"][0]
-        return c_void_p(data_pointer)
+        audio_data = np.ascontiguousarray(audio_data)
+        return audio_data.ctypes.data_as(c_void_p)
     
     def process(self, audio_data: np.ndarray):
         input_pointer = self.get_input_data(audio_data)
