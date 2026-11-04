@@ -95,22 +95,20 @@ class TenVad:
         self.create_and_init_handler()
     
     def create_and_init_handler(self):
-        assert (
-            self.vad_library.ten_vad_create(
-                POINTER(c_void_p)(self.vad_handler),
-                c_size_t(self.hop_size),
-                c_float(self.threshold),
-            ) 
-            == 0
-        ), "[TEN VAD]: create handler failure!"
+        result = self.vad_library.ten_vad_create(
+            POINTER(c_void_p)(self.vad_handler),
+            c_size_t(self.hop_size),
+            c_float(self.threshold),
+        )
+        if result != 0:
+            raise RuntimeError("[TEN VAD]: create handler failure!")
 
     def __del__(self):
-        assert (
-            self.vad_library.ten_vad_destroy(
-                POINTER(c_void_p)(self.vad_handler)
-            )
-            == 0
-        ), "[TEN VAD]: destroy handler failure!"
+        result = self.vad_library.ten_vad_destroy(
+            POINTER(c_void_p)(self.vad_handler)
+        )
+        if result != 0:
+            raise RuntimeError("[TEN VAD]: destroy handler failure!")
     
     def get_input_data(self, audio_data: np.ndarray):
         audio_data = np.squeeze(audio_data)
