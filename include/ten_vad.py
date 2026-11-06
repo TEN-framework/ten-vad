@@ -111,14 +111,15 @@ class TenVad:
             raise RuntimeError("[TEN VAD]: destroy handler failure!")
     
     def get_input_data(self, audio_data: np.ndarray):
+        # Explicit checks rather than assert: python -O would skip an assert and
+        # let the native code read hop_size int16 samples past a smaller buffer.
         audio_data = np.squeeze(audio_data)
-        assert (
-            len(audio_data.shape) == 1 
-            and audio_data.shape[0] == self.hop_size
-        ), "[TEN VAD]: audio data shape should be [{}]".format(self.hop_size)
-        assert (
-            type(audio_data[0]) == np.int16
-        ), "[TEN VAD]: audio data type error, must be int16"
+        if len(audio_data.shape) != 1 or audio_data.shape[0] != self.hop_size:
+            raise ValueError(
+                "[TEN VAD]: audio data shape should be [{}]".format(self.hop_size)
+            )
+        if type(audio_data[0]) != np.int16:
+            raise TypeError("[TEN VAD]: audio data type error, must be int16")
         audio_data = np.ascontiguousarray(audio_data)
         return audio_data.ctypes.data_as(c_void_p)
     
