@@ -1,0 +1,29 @@
+name: Test Linux ARM64 wheel
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/test-linux-arm64.yml
+      - examples/main.c
+      - examples/s0724-s0730.wav
+      - examples_onnx/CMakeLists.txt
+      - include/**
+      - packaging/**
+      - src/**
+      - LICENSE
+      - NOTICES
+
+permissions:
+  contents: read
+
+jobs:
+  wheel:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build and smoke-test the wheel offline
+        run: |
+          docker build -f packaging/Dockerfile --build-arg VERSION=0.0.0 -t ten-vad-arm64 .
+          docker run --rm --network none ten-vad-arm64

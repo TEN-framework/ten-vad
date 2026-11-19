@@ -17,12 +17,13 @@ class TenVad:
         # Get the directory where this module is installed
         module_dir = os.path.dirname(os.path.abspath(__file__))
         
-        if platform.system() == "Linux" and platform.machine() == "x86_64":
-            # Try git repo structure first
-            git_path = os.path.join(module_dir, "../lib/Linux/x64/libten_vad.so")
-            # Try installed package structure (lib directory is inside the package)
-            pip_path = os.path.join(module_dir, "lib/Linux/x64/libten_vad.so")
-            
+        linux_arches = {"x86_64": "x64", "aarch64": "aarch64"}
+        machine = platform.machine()
+        if platform.system() == "Linux" and machine in linux_arches:
+            library_path = os.path.join("lib", "Linux", linux_arches[machine], "libten_vad.so")
+            git_path = os.path.join(module_dir, "..", library_path)
+            pip_path = os.path.join(module_dir, library_path)
+
             if os.path.exists(git_path):
                 self.vad_library = CDLL(git_path)
             elif os.path.exists(pip_path):
@@ -44,7 +45,7 @@ class TenVad:
                 raise FileNotFoundError("Cannot find libten_vad at {} or {}".format(git_path, pip_path))
                 
         elif platform.system().upper() == 'WINDOWS':
-            if platform.machine().upper() in ['X64', 'X86_64', 'AMD64']:
+            if machine.upper() in ['X64', 'X86_64', 'AMD64']:
                 # Try git repo structure first
                 git_path = os.path.join(module_dir, "../lib/Windows/x64/ten_vad.dll")
                 # Try installed package structure
@@ -69,7 +70,7 @@ class TenVad:
                 else:
                     raise FileNotFoundError("Cannot find ten_vad.dll at {} or {}".format(git_path, pip_path))
         else:
-            raise NotImplementedError("Unsupported platform: {} {}".format(platform.system(), platform.machine()))
+            raise NotImplementedError("Unsupported platform: {} {}".format(platform.system(), machine))
         self.vad_handler = c_void_p(0)
         self.out_probability = c_float()
         self.out_flags = c_int32()
@@ -104,6 +105,8 @@ class TenVad:
             raise RuntimeError("[TEN VAD]: create handler failure!")
 
     def __del__(self):
+        if not getattr(self, "vad_handler", None):
+            return
         result = self.vad_library.ten_vad_destroy(
             POINTER(c_void_p)(self.vad_handler)
         )
