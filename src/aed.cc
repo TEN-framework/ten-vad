@@ -15,6 +15,10 @@
 #include "stft.h"
 #include <assert.h>
 
+#ifdef TEN_VAD_EMBED_ONNX_MODEL
+#include "ten_vad_model.h"
+#endif
+
 #define AUP_AED_ALIGN8(o) (((o) + 7) & (~7))
 #define AUP_AED_MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define AUP_AED_MIN(x, y) (((x) > (y)) ? (y) : (x))
@@ -39,8 +43,14 @@ AUP_MODULE_AIVAD::AUP_MODULE_AIVAD(char* onnx_path) {
   OrtSessionOptions* session_options;
   ort_api->CreateSessionOptions(&session_options);
   ort_api->SetIntraOpNumThreads(session_options, 1);
+#ifdef TEN_VAD_EMBED_ONNX_MODEL
+  status = ort_api->CreateSessionFromArray(
+      ort_env, ten_vad_model, sizeof(ten_vad_model), session_options,
+      &ort_session);
+#else
   status =
       ort_api->CreateSession(ort_env, onnx_path, session_options, &ort_session);
+#endif
   ort_api->ReleaseSessionOptions(session_options);
   if (status) {
     printf("Failed to create ort_session: %s\n",

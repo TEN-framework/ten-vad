@@ -47,6 +47,7 @@
 - [Quick Start](#quick-start)
   - [Python Usage](#python-usage)
     - [Linux / macOS / Windows](#1-linux--macos--windows)
+    - [Linux ARM64 wheel](#linux-arm64-wheel)
   - [JS Usage](#js-usage)
   - [Java Usage](#java-usage)
   - [Go (Golang) Usage](#go-golang-usage)
@@ -260,7 +261,7 @@ The project supports five major platforms with dynamic library linking.
     <td align="center"> x64 </td>
     <td align="center"> Python, C, Java, Go </td>
     <td rowspan="6">ten_vad.h <br> ten_vad.py <br> ten_vad.js <br> TenVad.java</td>
-    <td>  </td>
+    <td> Linux ARM64 Python wheels can be <a href="#linux-arm64-wheel">built from source</a>. </td>
   </tr>
   <tr>
     <th align="center"> Windows </th>
@@ -396,6 +397,28 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 **Note 3**: For **macOS**, run **build-and-deploy-macos.sh** instead.
 
 <br>
+
+#### **Linux ARM64 wheel**
+
+On a Linux ARM64 (`aarch64`) machine with Docker and BuildKit, build a wheel
+from the repository root. Set `VERSION` to the TEN VAD version you are building.
+The Docker build uses Debian 12 and bundles ONNX Runtime and the TEN VAD model.
+
+```bash
+docker build --target wheel --output type=local,dest=dist \
+  --build-arg VERSION=1.0.6.9 -f packaging/Dockerfile .
+python -m pip install dist/ten_vad-1.0.6.9-py3-none-linux_aarch64.whl
+```
+
+Use the wheel on a glibc-based ARM64 system with a compatible C/C++ runtime
+(for example, Debian 12). You can use the standard Python API from any working
+directory after installation.
+
+```python
+from ten_vad import TenVad
+
+vad = TenVad(hop_size=256, threshold=0.5)
+```
 
 ### **JS Usage**
 

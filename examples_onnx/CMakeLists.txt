@@ -19,6 +19,18 @@ include_directories(${ROOT}/include)
 include_directories(${ORT_ROOT}/include)
 file(GLOB LIBRARY_SOURCES "${ROOT}/src/*.cc" "${ROOT}/src/*.c")
 add_library(ten_vad SHARED ${LIBRARY_SOURCES})
+option(TEN_VAD_EMBED_ONNX_MODEL "Embed the model in libten_vad" OFF)
+if(TEN_VAD_EMBED_ONNX_MODEL)
+    set(TEN_VAD_MODEL "${ROOT}/src/onnx_model/ten-vad.onnx")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${TEN_VAD_MODEL}")
+    file(READ "${TEN_VAD_MODEL}" MODEL_HEX HEX)
+    string(REGEX REPLACE "([0-9a-f][0-9a-f])" "0x\\1," MODEL_BYTES "${MODEL_HEX}")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/ten_vad_model.h"
+        "static const unsigned char ten_vad_model[] = {${MODEL_BYTES}};\n")
+    target_include_directories(ten_vad PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+    target_compile_definitions(ten_vad PRIVATE TEN_VAD_EMBED_ONNX_MODEL)
+endif()
+
 link_directories(${ORT_ROOT}/lib)
 
 # Platform-specific ONNX Runtime linking
