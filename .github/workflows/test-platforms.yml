@@ -7,16 +7,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             platform: Linux
             python-version: '3.9'
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             platform: Linux
             python-version: '3.10'
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             platform: Linux
             python-version: '3.11'
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             platform: Linux
             python-version: '3.12'
           - os: macos-latest
