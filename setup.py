@@ -15,6 +15,7 @@ os.makedirs(package_dir, exist_ok=True)
 
 # Copy the Python interface as __init__.py
 shutil.copy("{}/include/ten_vad.py".format(root_dir), "{}/__init__.py".format(package_dir))
+shutil.copy("{}/README.md".format(root_dir), "{}/README.md".format(package_dir))
 
 # Copy entire lib directory structure to package, excluding unwanted platforms
 lib_src = os.path.join(root_dir, "lib")
@@ -30,12 +31,13 @@ with open(os.path.join(root_dir, "README.md"), "r", encoding="utf-8") as f:
 
 setup(
     name="ten_vad",
-    version="1.0.6.9",
+    version="1.0.6.10",
     description="Voice Activity Detector (VAD) : low-latency, high-performance and lightweight",
     packages=["ten_vad"],
     install_requires=["numpy"],
     package_data={
         "ten_vad": [
+            "README.md",
             "lib/Linux/x64/*.so",
             "lib/Windows/x64/*.dll",
             "lib/Windows/x86/*.dll",

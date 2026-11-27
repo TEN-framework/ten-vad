@@ -3,7 +3,7 @@ FROM ${BASE_IMAGE} AS build
 RUN apt-get update && apt-get install -y --no-install-recommends cmake g++ make \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
-COPY LICENSE NOTICES ./
+COPY LICENSE NOTICES README.md ./
 COPY packaging/ packaging/
 COPY examples_onnx/CMakeLists.txt examples_onnx/
 COPY examples/main.c examples/main.c

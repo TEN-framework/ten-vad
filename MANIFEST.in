@@ -5,22 +5,31 @@
 #  Refer to the "LICENSE" file in the root directory for more information.
 #
 
-# Include license and documentation
+# Documentation and release/build configuration.
 include LICENSE
 include NOTICES
 include README.md
+include BUILDING_RELEASE.md
+include requirements.txt
+include pyproject.toml
+include setup.py
 
-# Include Python interface
-include include/ten_vad.py
+# Public implementation, ONNX model, headers and reproducible ARM64 build tools.
+recursive-include include *
+recursive-include src *
+recursive-include packaging *
+recursive-include examples_onnx *
+recursive-include examples *
+recursive-include tests *.py
 
-# Include library files needed for building
+# These original prebuilt libraries are required by the default wheel builder.
 include lib/Linux/x64/libten_vad.so
 include lib/Windows/x64/ten_vad.dll
 include lib/Windows/x86/ten_vad.dll
 include lib/macOS/ten_vad.framework/Versions/A/ten_vad
 
-# Exclude unnecessary files
-prune testset
-prune examples
-prune examples_onnx
-prune src
+# Repository metadata, generated packages and test caches are not source inputs.
+prune .git
+prune build
+prune dist
+global-exclude __pycache__ *.py[cod] .DS_Store
