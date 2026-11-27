@@ -72,6 +72,7 @@ def build(version: str, output: Path, staging: Path) -> None:
     )
     shutil.copyfile(build_dir / "libten_vad.so", package_lib / "libten_vad.so")
     shutil.copyfile(ROOT / "include" / "ten_vad.py", package / "__init__.py")
+    shutil.copyfile(ROOT / "README.md", package / "README.md")
     for filename in ("LICENSE", "NOTICES"):
         shutil.copyfile(ROOT / filename, staging / "wheel" / filename)
 
@@ -82,7 +83,8 @@ build-backend = "setuptools.build_meta"
 """
     )
     (staging / "wheel" / "setup.py").write_text(
-        f"""from setuptools import Distribution, setup
+        f"""from pathlib import Path
+from setuptools import Distribution, setup
 from setuptools.command.bdist_wheel import bdist_wheel
 
 
@@ -100,10 +102,12 @@ setup(
     name="ten-vad",
     version={version!r},
     description="Voice Activity Detector (VAD) : low-latency, high-performance and lightweight",
+    long_description=(Path(__file__).parent / "ten_vad" / "README.md").read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
     python_requires=">=3.8",
     install_requires=["numpy"],
     packages=["ten_vad"],
-    package_data={{"ten_vad": ["lib/Linux/aarch64/*"]}},
+    package_data={{"ten_vad": ["lib/Linux/aarch64/*", "README.md"]}},
     license_files=["LICENSE", "NOTICES", "ONNXRuntime-*"],
     distclass=NativeDistribution,
     cmdclass={{"bdist_wheel": PlatformWheel}},

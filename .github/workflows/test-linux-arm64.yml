@@ -10,6 +10,7 @@ on:
       - include/**
       - packaging/**
       - src/**
+      - README.md
       - LICENSE
       - NOTICES
 

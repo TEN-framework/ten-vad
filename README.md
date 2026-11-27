@@ -400,19 +400,37 @@ You can check the official **ONNX Runtime releases** from [this website](https:/
 
 #### **Linux ARM64 wheel**
 
+On a glibc-based Linux ARM64 (`aarch64`) system with glibc 2.27 or later,
+install the published package with:
+
+```bash
+python -m pip install --upgrade ten-vad
+```
+
+For version 1.0.6.10, pip automatically selects the
+`manylinux_2_27_aarch64` wheel. This wheel bundles ONNX Runtime and the TEN VAD
+model, so the ONNX Runtime Python package is not required.
+
 On a Linux ARM64 (`aarch64`) machine with Docker and BuildKit, build a wheel
 from the repository root. Set `VERSION` to the TEN VAD version you are building.
 The Docker build uses Debian 12 and bundles ONNX Runtime and the TEN VAD model.
 
 ```bash
-docker build --target wheel --output type=local,dest=dist \
-  --build-arg VERSION=1.0.6.9 -f packaging/Dockerfile .
-python -m pip install dist/ten_vad-1.0.6.9-py3-none-linux_aarch64.whl
+docker build --target wheel --output type=local,dest=arm64-dist \
+  --build-arg VERSION=1.0.6.10 -f packaging/Dockerfile .
+python -m pip install auditwheel patchelf
+auditwheel repair arm64-dist/ten_vad-1.0.6.10-py3-none-linux_aarch64.whl -w dist
+python -m pip install dist/ten_vad-1.0.6.10-py3-none-manylinux_2_27_aarch64.whl
 ```
 
-Use the wheel on a glibc-based ARM64 system with a compatible C/C++ runtime
-(for example, Debian 12). You can use the standard Python API from any working
-directory after installation.
+The Docker build first produces a `linux_aarch64` wheel for local use.
+`auditwheel repair` checks its actual ABI requirements and produces the
+manylinux wheel for PyPI publication; changing the filename alone does not
+provide compatibility. The current native libraries require glibc 2.27.
+See [BUILDING_RELEASE.md](https://github.com/TEN-framework/ten-vad/blob/main/BUILDING_RELEASE.md)
+for the complete source-distribution build instructions.
+
+You can use the standard Python API from any working directory after installation.
 
 ```python
 from ten_vad import TenVad
